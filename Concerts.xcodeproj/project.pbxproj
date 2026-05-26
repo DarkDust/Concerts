@@ -41,8 +41,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Data/Band.swift,
-				Data/ConcertVisit.swift,
 				Data/ModelContainer.swift,
+				Data/Performance.swift,
 				Data/Venue.swift,
 			);
 			target = 49FAF88D2FC628FE00C5239D /* UITests */;
@@ -51,8 +51,8 @@
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Data/Band.swift,
-				Data/ConcertVisit.swift,
 				Data/ModelContainer.swift,
+				Data/Performance.swift,
 				Data/Venue.swift,
 			);
 			target = 49FAF8832FC628FE00C5239D /* UnitTests */;

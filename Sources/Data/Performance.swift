@@ -1,5 +1,5 @@
 //
-//  ConcertVisit.swift
+//  Performance.swift
 //  Concerts
 //
 //  Created by Marc Haisenko on 2026-05-26.
@@ -9,9 +9,10 @@ import Foundation
 import SwiftData
 
 
-/// A single concert visit.
+/// A single performance of a band at a venue on a date.
 @Model
-final class ConcertVisit {
+final class Performance {
+    
     /// Date of the concert.
     var date: Date
     
@@ -70,12 +71,12 @@ final class ConcertVisit {
             to: startOfDay
         )!
         
-        let predicate = #Predicate<ConcertVisit> {
+        let predicate = #Predicate<Performance> {
             $0.date >= startOfDay &&
             $0.date < nextDay
         }
         
-        let descriptor = FetchDescriptor<ConcertVisit>(
+        let descriptor = FetchDescriptor<Performance>(
             predicate: predicate,
             sortBy: [
                 SortDescriptor(\.sequence, order: .reverse)

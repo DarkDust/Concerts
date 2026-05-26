@@ -19,8 +19,8 @@ final class Venue {
     var city: String?
     
     /// Which concert were visited at the venue.
-    @Relationship(inverse: \ConcertVisit.venue)
-    var visits: [ConcertVisit] = []
+    @Relationship(inverse: \Performance.venue)
+    var performances: [Performance] = []
     
     
     /// Default initializer.

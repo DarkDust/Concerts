@@ -15,8 +15,8 @@ final class Band {
     var name: String
     
     /// Concert visits.
-    @Relationship(inverse: \ConcertVisit.band)
-    var visits: [ConcertVisit] = []
+    @Relationship(inverse: \Performance.band)
+    var performances: [Performance] = []
     
     
     /// Default initializer.

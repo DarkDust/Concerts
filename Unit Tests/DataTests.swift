@@ -50,21 +50,21 @@ struct DataTests {
         #expect(venues.first?.name == "Backstage Werk")
         
         // Create visits, one after another
-        let date = ConcertVisit.normalizedConcertDate(.now)
-        let sequence1 = try ConcertVisit.nextSequence(for: date, in: context)
+        let date = Performance.normalizedConcertDate(.now)
+        let sequence1 = try Performance.nextSequence(for: date, in: context)
         #expect(sequence1 == 1)
-        let visit1 = ConcertVisit(date: date, sequence: sequence1, band: band1, venue: venue)
+        let visit1 = Performance(date: date, sequence: sequence1, band: band1, venue: venue)
         context.insert(visit1)
         try context.save()
         
-        let sequence2 = try ConcertVisit.nextSequence(for: date, in: context)
+        let sequence2 = try Performance.nextSequence(for: date, in: context)
         #expect(sequence2 == 2)
-        let visit2 = ConcertVisit(date: date, sequence: sequence2, band: band2, venue: venue)
+        let visit2 = Performance(date: date, sequence: sequence2, band: band2, venue: venue)
         context.insert(visit2)
         try context.save()
         
         // Fetch visits back
-        let visits = try context.fetch(FetchDescriptor<ConcertVisit>())
+        let visits = try context.fetch(FetchDescriptor<Performance>())
         #expect(visits.count == 2)
         var haveVisit1 = false
         var haveVisit2 = false

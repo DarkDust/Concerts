@@ -43,7 +43,7 @@ extension ModelContainer {
     static let concertsSchema = Schema([
         Band.self,
         Venue.self,
-        ConcertVisit.self,
+        Performance.self,
     ])
     
 }
