@@ -40,9 +40,22 @@
 		49FAF8C12FC637BE00C5239D /* Exceptions for "Sources" folder in "UITests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
+				Data/Band.swift,
+				Data/ConcertVisit.swift,
 				Data/ModelContainer.swift,
+				Data/Venue.swift,
 			);
 			target = 49FAF88D2FC628FE00C5239D /* UITests */;
+		};
+		49FAF8D12FC645E200C5239D /* Exceptions for "Sources" folder in "UnitTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Data/Band.swift,
+				Data/ConcertVisit.swift,
+				Data/ModelContainer.swift,
+				Data/Venue.swift,
+			);
+			target = 49FAF8832FC628FE00C5239D /* UnitTests */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
@@ -50,6 +63,7 @@
 		49FAF8752FC628FD00C5239D /* Sources */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
+				49FAF8D12FC645E200C5239D /* Exceptions for "Sources" folder in "UnitTests" target */,
 				49FAF8C12FC637BE00C5239D /* Exceptions for "Sources" folder in "UITests" target */,
 			);
 			path = Sources;

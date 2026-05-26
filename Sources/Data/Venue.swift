@@ -1,0 +1,31 @@
+//
+//  Venue.swift
+//  Concerts
+//
+//  Created by Marc Haisenko on 2026-05-26.
+//
+
+import SwiftData
+
+
+/// Venue or event (festival).
+@Model
+final class Venue {
+    /// Name of the venue.
+    @Attribute(.unique)
+    var name: String
+    
+    /// City in which the venue is located if outside my default city.
+    var city: String?
+    
+    /// Which concert were visited at the venue.
+    @Relationship(inverse: \ConcertVisit.venue)
+    var visits: [ConcertVisit] = []
+    
+    
+    /// Default initializer.
+    init(name: String, city: String? = nil) {
+        self.name = name
+        self.city = city
+    }
+}

@@ -14,7 +14,7 @@ extension ModelContainer {
     static func create() -> ModelContainer {
         let isTesting = ProcessInfo.processInfo.environment["UITesting"] != nil
         let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: isTesting)
-
+        
         do {
             return try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])
         } catch {
@@ -40,6 +40,10 @@ extension ModelContainer {
 private
 extension ModelContainer {
     
-    static let concertsSchema = Schema([Item.self])
+    static let concertsSchema = Schema([
+        Band.self,
+        Venue.self,
+        ConcertVisit.self,
+    ])
     
 }
