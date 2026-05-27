@@ -13,6 +13,11 @@ import SwiftUI
 /// Main view to add a performance.
 struct AddPerformanceView: View {
     
+    /// Known fields.
+    enum Field {
+        case bandName
+    }
+    
     /// Sheet dismissal.
     @Environment(\.dismiss)
     private var dismiss
@@ -29,9 +34,21 @@ struct AddPerformanceView: View {
     @State
     private var bandName: String = ""
     
+    /// Suggestions for the band name.
+    @State
+    private var bandNameSuggestions: [Band] = []
+    
     /// Name of the venue or event.
     @State
     private var venueName: String = ""
+    
+    /// Suggestions for the venue name.
+    @State
+    private var venueNameSuggestions: [Venue] = []
+    
+    /// Used to move input focus to the band name when sheet is presented.
+    @FocusState
+    private var focusedField: Field?
     
     
     var body: some View {
@@ -48,23 +65,9 @@ struct AddPerformanceView: View {
                     )
                     .datePickerStyle(.compact)
                     
-                    TextField(
-                        String(
-                            localized: "Band",
-                            comment: "Name of the band for which to add a performance"
-                        ),
-                        text: $bandName
-                    )
-                    .accessibilityIdentifier("band-name")
+                    bandNameField
                     
-                    TextField(
-                        String(
-                            localized: "Venue",
-                            comment: "Name of the venue or event for which to add a performance"
-                        ),
-                        text: $venueName
-                    )
-                    .accessibilityIdentifier("venue-name")
+                    venueNameField
                 }
             }
             .padding()
@@ -103,8 +106,12 @@ struct AddPerformanceView: View {
                     )
                 }
             }
+            .onAppear {
+                focusedField = .bandName
+            }
         }
     }
+    
 }
 
 
@@ -119,6 +126,75 @@ extension AddPerformanceView {
             dismiss()
         } catch {
             // TODO: Present alert
+        }
+    }
+    
+    
+    @ViewBuilder
+    var bandNameField: some View {
+        TextField(
+            String(
+                localized: "Band",
+                comment: "Name of the band for which to add a performance"
+            ),
+            text: $bandName
+        )
+        .accessibilityIdentifier("band-name")
+        .onChange(of: bandName) {
+            (_, newValue) in
+            
+            guard !newValue.isEmpty else {
+                bandNameSuggestions = []
+                return
+            }
+            do {
+                bandNameSuggestions = try repositories.bands.search(query: newValue)
+            } catch {
+                bandNameSuggestions = []
+            }
+        }
+        .textInputSuggestions {
+            ForEach(bandNameSuggestions) {
+                (band) in
+                
+                Text(band.name)
+                    .textInputCompletion(band.name)
+            }
+        }
+        .focused($focusedField, equals: .bandName)
+    }
+    
+    
+    @ViewBuilder
+    var venueNameField: some View {
+        TextField(
+            String(
+                localized: "Venue",
+                comment: "Name of the venue or event for which to add a performance"
+            ),
+            text: $venueName
+        )
+        .accessibilityIdentifier("venue-name")
+        .onChange(of: venueName) {
+            (_, newValue) in
+            
+            guard !newValue.isEmpty else {
+                venueNameSuggestions = []
+                return
+            }
+            do {
+                venueNameSuggestions = try repositories.venues.search(query: newValue)
+            } catch {
+                venueNameSuggestions = []
+            }
+        }
+        .textInputSuggestions {
+            ForEach(venueNameSuggestions) {
+                (venue) in
+                
+                Text(venue.name)
+                    .textInputCompletion(venue.name)
+            }
         }
     }
     
