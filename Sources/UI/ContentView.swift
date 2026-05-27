@@ -19,7 +19,7 @@ struct ContentView: View {
     
     var body: some View {
         NavigationStack {
-            PerformanceList()
+            PerformanceListView()
                 .toolbar {
                     ToolbarItem {
                         Button(action: addItem) {

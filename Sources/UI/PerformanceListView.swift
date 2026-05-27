@@ -1,5 +1,5 @@
 //
-//  PerformanceList.swift
+//  PerformanceListView.swift
 //  Concerts
 //
 //  Created by Marc Haisenko on 2026-05-27.
@@ -9,7 +9,7 @@ import SwiftUI
 import SwiftData
 
 
-struct PerformanceList: View {
+struct PerformanceListView: View {
     
     @Query(
         sort: [
@@ -31,7 +31,7 @@ struct PerformanceList: View {
 
 
 private
-extension PerformanceList {
+extension PerformanceListView {
     
     struct ContentMacOS: View {
         let performances: [Performance]
@@ -89,6 +89,6 @@ extension PerformanceList {
 
 #Preview {
     let container = ModelContainer.mock(scenario: .basic)
-    PerformanceList()
+    PerformanceListView()
         .modelContainer(container)
 }
