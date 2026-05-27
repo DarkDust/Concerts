@@ -12,31 +12,28 @@ struct ContentView: View {
     @Environment(\.modelContext)
     private var modelContext
     
+    @State
+    private var showingAddPerformance = false
     
     var body: some View {
-        NavigationSplitView {
-            List {
-            }
-#if os(macOS)
-            .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-#endif
-            .toolbar {
-#if os(iOS)
-                ToolbarItem(placement: .navigationBarTrailing) {
-                    EditButton()
-                }
-#endif
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label("Add Item", systemImage: "plus")
-                            .accessibilityIdentifier("add-item")
+        NavigationStack {
+            PerformanceList()
+                .toolbar {
+                    ToolbarItem {
+                        Button(action: addItem) {
+                            Label("Add Item", systemImage: "plus")
+                                .accessibilityIdentifier("add-item")
+                        }
                     }
                 }
-            }
-        } detail: {
-            Text("Select an item")
         }
         .environment(Repositories(context: modelContext))
+        .sheet(isPresented: $showingAddPerformance) {
+            AddPerformanceView()
+                .environment(Repositories(context: modelContext))
+                .frame(minWidth: 400, minHeight: 100)
+                .presentationDetents([.medium])
+        }
     }
     
 }
@@ -46,19 +43,9 @@ private
 extension ContentView {
     
     func addItem() {
-        withAnimation {
-//            let newItem = Item(timestamp: Date())
-//            modelContext.insert(newItem)
-        }
+        showingAddPerformance = true
     }
-
-    func deleteItems(offsets: IndexSet) {
-        withAnimation {
-//            for index in offsets {
-//                modelContext.delete(items[index])
-//            }
-        }
-    }
+    
 }
 
 
