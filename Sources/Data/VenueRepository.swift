@@ -33,10 +33,10 @@ final class VenueRepository {
         )
 
         do {
-            // See comment on ``Venue/name``. We need to manually deduplicate.
             let existing = try context.fetch(descriptor)
-            if !existing.isEmpty {
-                throw RepositoryError.duplicateEntry
+            if let venue = existing.first {
+                assert(existing.count == 1)
+                return venue
             }
 
             let venue = Venue(name: normalizedName)

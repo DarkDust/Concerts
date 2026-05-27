@@ -11,7 +11,7 @@ import Testing
 
 struct DataTests {
     
-    @Test
+    @Test @MainActor
     func testAddVisitsRaw() throws {
         let container = ModelContainer.mock()
         let context = ModelContext(container)
@@ -156,26 +156,17 @@ struct DataTests {
         let context = ModelContext(container)
         let repositories = Repositories(context: context)
         
-        let _ = try repositories.bands.create(name: "Zanias")
-        let bandError = #expect(throws: RepositoryError.self) {
-            _ = try repositories.bands.create(name: "Zanias")
-        }
-        #expect(isDuplicateEntryError(bandError))
+        let band1 = try repositories.bands.create(name: "Zanias")
+        let band2 = try repositories.bands.create(name: "Zanias")
+        let band3 = try repositories.bands.create(name: "Linea Aspera")
+        #expect(band1.id == band2.id)
+        #expect(band3.id != band1.id)
         
-        _ = try repositories.venues.create(name: "Milla")
-        let venueError = #expect(throws: RepositoryError.self) {
-            _ = try repositories.venues.create(name: "Milla")
-        }
-        #expect(isDuplicateEntryError(venueError))
+        let venue1 = try repositories.venues.create(name: "Milla")
+        let venue2 = try repositories.venues.create(name: "Milla")
+        let venue3 = try repositories.venues.create(name: "ZIRKA")
+        #expect(venue1.id == venue2.id)
+        #expect(venue3.id != venue1.id)
     }
     
-}
-
-
-func isDuplicateEntryError(_ error: (any Error)?) -> Bool {
-    guard case .duplicateEntry = error as? RepositoryError else {
-        return false
-    }
-
-    return true
 }

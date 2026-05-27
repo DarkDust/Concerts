@@ -34,10 +34,10 @@ final class BandRepository {
         )
 
         do {
-            // See comment on ``Band/name``. We need to manually deduplicate.
             let existing = try context.fetch(descriptor)
-            if !existing.isEmpty {
-                throw RepositoryError.duplicateEntry
+            if let band = existing.first {
+                assert(existing.count == 1)
+                return band
             }
 
             let band = Band(name: normalizedName)
