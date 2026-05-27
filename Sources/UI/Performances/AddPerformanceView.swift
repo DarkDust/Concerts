@@ -68,12 +68,14 @@ struct AddPerformanceView: View {
                 }
             }
             .padding()
-            .navigationTitle(
-                LocalizedStringResource(
-                    "Add Performance",
-                    comment: "Title of the view for adding a performance"
+            #if os(macOS)
+                .navigationTitle(
+                    LocalizedStringResource(
+                        "Add Performance",
+                        comment: "Title of the view for adding a performance"
+                    )
                 )
-            )
+            #endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(
