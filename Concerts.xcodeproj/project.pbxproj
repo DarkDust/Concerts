@@ -35,6 +35,9 @@
 			membershipExceptions = (
 				Info.plist,
 			);
+			platformFiltersByRelativePath = {
+				"Launch Screen.storyboard" = (ios, xros, );
+			};
 			target = 49FAF8722FC628FD00C5239D /* Concerts */;
 		};
 		49FAF8C12FC637BE00C5239D /* Exceptions for "Sources" folder in "UITests" target */ = {
