@@ -18,7 +18,7 @@ struct ConcertsApp: App {
     
     var body: some Scene {
         WindowGroup {
-            ContentView(showingAddPerformance: $showingAddPerformance)
+            MainView(showingAddPerformance: $showingAddPerformance)
         }
         .modelContainer(ModelContainer.create())
         .commands {
@@ -29,6 +29,12 @@ struct ConcertsApp: App {
                 .keyboardShortcut("n")
             }
         }
+        
+        #if os(macOS)
+        Settings {
+            SettingsView()
+        }
+        #endif
     }
     
 }
