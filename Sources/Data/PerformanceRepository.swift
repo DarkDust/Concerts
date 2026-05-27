@@ -23,12 +23,19 @@ final class PerformanceRepository {
     
     
     /// Add a performance.
-    func add(band: Band, venue: Venue, date: Date) throws(RepositoryError) -> Performance {
+    func add(band: Band, venue: Venue, date: Date, partialAttendance: Bool) throws(RepositoryError) -> Performance {
         do {
             let normalizedDate = Performance.normalizedConcertDate(date)
             let nextSequence = try Performance.nextSequence(for: normalizedDate, in: context)
             
-            let performance = Performance(date: normalizedDate, sequence: nextSequence, band: band, venue: venue)
+            let performance = Performance(
+                date: normalizedDate,
+                sequence: nextSequence,
+                partialAttendance: partialAttendance,
+                band: band,
+                venue: venue
+            )
+            
             context.insert(performance)
             try context.save()
             return performance

@@ -54,9 +54,20 @@ extension Repositories {
             return false
         }
         
-        let bandName = parts[0]
+        let rawBandName = parts[0]
         let venueName = parts[2]
         let dateString = parts[1]
+        
+        let bandName: String
+        let partial: Bool
+        if rawBandName.hasPrefix("("), rawBandName.hasSuffix(")") {
+            bandName = String(rawBandName.dropFirst().dropLast())
+            partial = true
+            
+        } else {
+            bandName = rawBandName
+            partial = false
+        }
         
         guard let date = Self.dateFormatter.date(from: dateString) else {
             NSLog("⚠️ Invalid date '\(dateString)' in line: \(line)")
@@ -66,7 +77,7 @@ extension Repositories {
         do {
             let band = try self.bands.create(name: bandName)
             let venue = try self.venues.create(name: venueName)
-            _ = try self.performances.add(band: band, venue: venue, date: date)
+            _ = try self.performances.add(band: band, venue: venue, date: date, partialAttendance: partial)
             return true
             
         } catch {

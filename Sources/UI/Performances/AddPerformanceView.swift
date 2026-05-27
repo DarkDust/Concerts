@@ -19,32 +19,36 @@ struct AddPerformanceView: View {
     }
     
     /// Sheet dismissal.
-    @Environment(\.dismiss)
-    private var dismiss
+    @Environment(\.dismiss) private
+    var dismiss
     
     /// Repositories for data operations.
-    @Environment(Repositories.self)
-    private var repositories
+    @Environment(Repositories.self) private
+    var repositories
     
     /// Date of performance.
-    @State
-    private var date: Date = Performance.normalizedConcertDate(.now)
+    @State private
+    var date: Date = Performance.normalizedConcertDate(.now)
     
     /// Name of the band playing.
-    @State
-    private var bandName: String = ""
+    @State private
+    var bandName: String = ""
     
     /// Suggestions for the band name.
-    @State
-    private var bandNameSuggestions: [Band] = []
+    @State private
+    var bandNameSuggestions: [Band] = []
     
     /// Name of the venue or event.
-    @State
-    private var venueName: String = ""
+    @State private
+    var venueName: String = ""
     
     /// Suggestions for the venue name.
-    @State
-    private var venueNameSuggestions: [Venue] = []
+    @State private
+    var venueNameSuggestions: [Venue] = []
+    
+    /// Indicates whether the performance was only partially attended.
+    @State private
+    var partialAttendance: Bool = false
     
     /// Used to move input focus to the band name when sheet is presented.
     @FocusState
@@ -68,6 +72,14 @@ struct AddPerformanceView: View {
                     bandNameField
                     
                     venueNameField
+                    
+                    Toggle(
+                        LocalizedStringResource(
+                            "Partial Attendance",
+                            comment: "Checkbox to mark a performance as not fully attended"
+                        ),
+                        isOn: $partialAttendance
+                    )
                 }
             }
             .padding()
@@ -123,7 +135,7 @@ extension AddPerformanceView {
         do {
             let band = try repositories.bands.create(name: bandName)
             let venue = try repositories.venues.create(name: venueName)
-            _ = try repositories.performances.add(band: band, venue: venue, date: date)
+            _ = try repositories.performances.add(band: band, venue: venue, date: date, partialAttendance: partialAttendance)
             dismiss()
         } catch {
             // TODO: Present alert

@@ -60,17 +60,23 @@ extension Repositories {
             let band4 = try! repositories.bands.create(name: "EMMON")
             let band5 = try! repositories.bands.create(name: "Klangstabil")
             let venue2 = try! repositories.venues.create(name: "Feierwerk")
-            _ = try! repositories.performances.add(band: band4, venue: venue2, date: date2)
-            _ = try! repositories.performances.add(band: band5, venue: venue2, date: date2)
+            _ = try! repositories.performances.add(band: band4, venue: venue2, date: date2, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band5, venue: venue2, date: date2, partialAttendance: false)
             
             let date1 = DateComponents(calendar: .current, year: 2025, month: 12, day: 1).date!
             let band1 = try! repositories.bands.create(name: "GOST")
             let band2 = try! repositories.bands.create(name: "Kælan Mikla")
             let band3 = try! repositories.bands.create(name: "Pertubator")
             let venue1 = try! repositories.venues.create(name: "Technikum")
-            _ = try! repositories.performances.add(band: band1, venue: venue1, date: date1)
-            _ = try! repositories.performances.add(band: band2, venue: venue1, date: date1)
-            _ = try! repositories.performances.add(band: band3, venue: venue1, date: date1)
+            _ = try! repositories.performances.add(band: band1, venue: venue1, date: date1, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band2, venue: venue1, date: date1, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band3, venue: venue1, date: date1, partialAttendance: false)
+            
+            let date3 = DateComponents(calendar: .current, year: 2023, month: 5, day: 23).date!
+            let band6 = try! repositories.bands.create(name: "Gggoldd")
+            let band7 = try! repositories.bands.create(name: "MONO")
+            _ = try! repositories.performances.add(band: band6, venue: venue2, date: date3, partialAttendance: true)
+            _ = try! repositories.performances.add(band: band7, venue: venue2, date: date3, partialAttendance: false)
         }
         
         return repositories

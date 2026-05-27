@@ -47,19 +47,21 @@ extension PerformanceListView {
                 ) {
                     Text(
                         $0.band?.name ?? String(localized: "Unknown", comment: "Unknown band name")
-                    )
+                    ).partialAttendance($0.partialAttendance)
                 }
                 
                 TableColumn(
                     LocalizedStringResource("Venue", comment: "Table column title: Venue name")
                 ) {
                     Text($0.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
+                        .partialAttendance($0.partialAttendance)
                 }
                 
                 TableColumn(
                     LocalizedStringResource("Date", comment: "Table column title: Performance date")
                 ) {
                     Text($0.date, format: .dateTime.year().month().day())
+                        .partialAttendance($0.partialAttendance)
                 }
                 .width(100)
             }
@@ -83,11 +85,13 @@ extension PerformanceListView {
                     VStack(alignment: .leading, spacing: 4) {
                         Text(performance.band?.name ?? String(localized: "Unknown", comment: "Unknown band name"))
                             .font(.headline)
+                            .partialAttendance(performance.partialAttendance)
                         
                         HStack() {
                             Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)
+                                .partialAttendance(performance.partialAttendance)
                             
                             Spacer()
                             
@@ -97,6 +101,7 @@ extension PerformanceListView {
                             )
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
+                            .partialAttendance(performance.partialAttendance)
                         }
                     }
                 }
@@ -113,6 +118,38 @@ extension PerformanceListView {
                 .padding()
             }
         }
+    }
+}
+
+private
+struct PartialAttendanceModifier: ViewModifier {
+    
+    let partialAttendance: Bool
+    
+    func body(content: Content) -> some View {
+        if partialAttendance {
+            content
+                .foregroundStyle(.secondary)
+                .italic()
+        } else {
+            content
+        }
+    }
+    
+}
+
+
+private
+extension View {
+
+    func partialAttendance(
+        _ partialAttendance: Bool
+    ) -> some View {
+        modifier(
+            PartialAttendanceModifier(
+                partialAttendance: partialAttendance
+            )
+        )
     }
     
 }
