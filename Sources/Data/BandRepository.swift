@@ -69,4 +69,11 @@ final class BandRepository {
         return try context.fetch(descriptor)
     }
     
+    
+    /// Deletes all entries.
+    func deleteEverything() throws {
+        try context.delete(model: Band.self)
+        try context.save()
+    }
+    
 }

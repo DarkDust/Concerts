@@ -68,5 +68,12 @@ final class VenueRepository {
         
         return try context.fetch(descriptor)
     }
-
+    
+    
+    /// Deletes all entries.
+    func deleteEverything() throws {
+        try context.delete(model: Venue.self)
+        try context.save()
+    }
+    
 }

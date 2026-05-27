@@ -44,4 +44,11 @@ final class PerformanceRepository {
         try context.fetch(FetchDescriptor<Performance>())
     }
     
+    
+    /// Deletes all entries.
+    func deleteEverything() throws {
+        try context.delete(model: Performance.self)
+        try context.save()
+    }
+    
 }
