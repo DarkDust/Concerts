@@ -50,7 +50,7 @@ class ConcertsUITests: XCTestCase {
         venueNameField.typeText("Awesome Venue")
         
         // Confirm add
-        let confirmButton = app.buttons["Add"]
+        let confirmButton = app.buttons["add-performance"]
         XCTAssertTrue(confirmButton.waitForExistence(timeout: 2))
         confirmButton.click()
         

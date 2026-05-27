@@ -71,14 +71,14 @@ struct AddPerformanceView: View {
                 }
             }
             .padding()
-            #if os(macOS)
-                .navigationTitle(
-                    LocalizedStringResource(
-                        "Add Performance",
-                        comment: "Title of the view for adding a performance"
-                    )
+#if os(macOS)
+            .navigationTitle(
+                LocalizedStringResource(
+                    "Add Performance",
+                    comment: "Title of the view for adding a performance"
                 )
-            #endif
+            )
+#endif
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
                     Button(
@@ -100,6 +100,7 @@ struct AddPerformanceView: View {
                     ) {
                         addPerformance()
                     }
+                    .accessibilityIdentifier("add-performance")
                     .disabled(
                         bandName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
                         || venueName.trimmingCharacters(in: .whitespacesAndNewlines).isEmpty
@@ -132,70 +133,60 @@ extension AddPerformanceView {
     
     @ViewBuilder
     var bandNameField: some View {
-        TextField(
+        AutoSuggestTextField<Band>(
             String(
                 localized: "Band",
                 comment: "Name of the band for which to add a performance"
             ),
-            text: $bandName
+            text: $bandName,
+            suggestions: {
+                guard !$0.isEmpty else {
+                    return []
+                }
+                do {
+                    let results = try repositories.bands.search(query: $0)
+                    if results.count == 1, results.first?.name == $0 {
+                        return []
+                    } else {
+                        return results
+                    }
+                } catch {
+                    return []
+                }
+            },
+            suggestionLabel: { $0.name }
         )
         .accessibilityIdentifier("band-name")
-        .onChange(of: bandName) {
-            (_, newValue) in
-            
-            guard !newValue.isEmpty else {
-                bandNameSuggestions = []
-                return
-            }
-            do {
-                bandNameSuggestions = try repositories.bands.search(query: newValue)
-            } catch {
-                bandNameSuggestions = []
-            }
-        }
-        .textInputSuggestions {
-            ForEach(bandNameSuggestions) {
-                (band) in
-                
-                Text(band.name)
-                    .textInputCompletion(band.name)
-            }
-        }
         .focused($focusedField, equals: .bandName)
     }
     
     
     @ViewBuilder
     var venueNameField: some View {
-        TextField(
+        AutoSuggestTextField<Venue>(
             String(
                 localized: "Venue",
                 comment: "Name of the venue or event for which to add a performance"
             ),
-            text: $venueName
+            text: $venueName,
+            suggestions: {
+                guard !$0.isEmpty else {
+                    return []
+                }
+                do {
+                    let results = try repositories.venues.search(query: $0)
+                    if results.count == 1, results.first?.name == $0 {
+                        return []
+                    } else {
+                        return results
+                    }
+                } catch {
+                    return []
+                }
+            },
+            suggestionLabel: { $0.name }
         )
         .accessibilityIdentifier("venue-name")
-        .onChange(of: venueName) {
-            (_, newValue) in
-            
-            guard !newValue.isEmpty else {
-                venueNameSuggestions = []
-                return
-            }
-            do {
-                venueNameSuggestions = try repositories.venues.search(query: newValue)
-            } catch {
-                venueNameSuggestions = []
-            }
-        }
-        .textInputSuggestions {
-            ForEach(venueNameSuggestions) {
-                (venue) in
-                
-                Text(venue.name)
-                    .textInputCompletion(venue.name)
-            }
-        }
     }
     
 }
