@@ -11,22 +11,22 @@ import SwiftData
 @main
 struct ConcertsApp: App {
     
-    /// Boolean to toggle the ``AddPerformanceView`` sheet.
+    /// Shared UI state used throughout the app.
     @State
-    private var showingAddPerformance = false
-    
+    private var uiState = AppUIState()
     
     var body: some Scene {
         WindowGroup {
-            MainView(showingAddPerformance: $showingAddPerformance)
+            MainView()
         }
         .modelContainer(ModelContainer.create())
+        .environment(uiState)
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button(
                     LocalizedStringResource("Add Performance", comment: "Menu entry to add a new performance)")
                 ) {
-                    showingAddPerformance = true
+                    uiState.presentedSheet = .addPerformance
                 }
                 .keyboardShortcut("n")
             }

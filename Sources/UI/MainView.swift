@@ -15,12 +15,14 @@ struct MainView: View {
     @Environment(\.modelContext)
     private var modelContext
     
-    /// Boolean to toggle the ``AddPerformanceView`` sheet.
-    @Binding
-    var showingAddPerformance: Bool
+    /// Shared UI state.
+    @Environment(AppUIState.self)
+    private var uiState: AppUIState
     
     
     var body: some View {
+        @Bindable var uiState = uiState
+        
         TabView {
             PerformanceListView()
                 .tabItem {
@@ -61,11 +63,16 @@ struct MainView: View {
             #endif
         }
         .environment(Repositories(context: modelContext))
-        .sheet(isPresented: $showingAddPerformance) {
-            AddPerformanceView()
-                .environment(Repositories(context: modelContext))
-                .frame(minWidth: 400, minHeight: 100)
-                .presentationDetents([.medium])
+        .sheet(item: $uiState.presentedSheet) {
+            (sheet) in
+            
+            switch sheet {
+            case .addPerformance:
+                AddPerformanceView()
+                    .environment(Repositories(context: modelContext))
+                    .frame(minWidth: 400, minHeight: 100)
+                    .presentationDetents([.medium])
+            }
         }
     }
     
@@ -76,13 +83,14 @@ private
 extension MainView {
     
     func addItem() {
-        showingAddPerformance = true
+        uiState.presentedSheet = .addPerformance
     }
     
 }
 
 
 #Preview {
-    MainView(showingAddPerformance: .constant(false))
+    MainView()
         .modelContainer(ModelContainer.mock(scenario: .basic))
+        .environment(AppUIState())
 }

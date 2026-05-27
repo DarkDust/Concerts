@@ -9,8 +9,10 @@ import SwiftUI
 import SwiftData
 
 
+/// Shows a list of performances.
 struct PerformanceListView: View {
     
+    /// The list of performances to show.
     @Query(
         sort: [
             SortDescriptor(\Performance.date, order: .forward),
@@ -18,6 +20,7 @@ struct PerformanceListView: View {
         ]
     )
     private var performances: [Performance]
+    
     
     var body: some View {
         #if os(iOS)
@@ -33,6 +36,7 @@ struct PerformanceListView: View {
 private
 extension PerformanceListView {
     
+    /// List view for macOS using a table.
     struct ContentMacOS: View {
         let performances: [Performance]
         
@@ -62,32 +66,51 @@ extension PerformanceListView {
         }
     }
     
+    
+    /// List view for iOS using a simple list.
     struct ContentiOS: View {
         let performances: [Performance]
         
+        @Environment(AppUIState.self)
+        private var appUIState: AppUIState
+        
+        
         var body: some View {
-            List(performances) {
-                (performance) in
-                
-                VStack(alignment: .leading, spacing: 4) {
-                    Text(performance.band?.name ?? String(localized: "Unknown", comment: "Unknown band name"))
-                        .font(.headline)
+            ZStack(alignment: .bottomTrailing) {
+                List(performances) {
+                    (performance) in
                     
-                    HStack() {
-                        Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
+                    VStack(alignment: .leading, spacing: 4) {
+                        Text(performance.band?.name ?? String(localized: "Unknown", comment: "Unknown band name"))
+                            .font(.headline)
+                        
+                        HStack() {
+                            Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
+                            
+                            Spacer()
+                            
+                            Text(
+                                performance.date,
+                                format: .dateTime.year().month().day()
+                            )
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
-                        
-                        Spacer()
-                        
-                        Text(
-                            performance.date,
-                            format: .dateTime.year().month().day()
-                        )
-                        .font(.subheadline)
-                        .foregroundStyle(.secondary)
+                        }
                     }
                 }
+                
+                Button {
+                    appUIState.presentedSheet = .addPerformance
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .padding()
+                }
+                .buttonStyle(.borderedProminent)
+                .clipShape(Circle())
+                .padding()
             }
         }
     }
@@ -99,4 +122,5 @@ extension PerformanceListView {
     let container = ModelContainer.mock(scenario: .basic)
     PerformanceListView()
         .modelContainer(container)
+        .environment(AppUIState())
 }
