@@ -11,11 +11,24 @@ import SwiftData
 @main
 struct ConcertsApp: App {
     
+    /// Boolean to toggle the ``AddPerformanceView`` sheet.
+    @State
+    private var showingAddPerformance = false
+    
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            ContentView(showingAddPerformance: $showingAddPerformance)
         }
         .modelContainer(ModelContainer.create())
+        .commands {
+            CommandGroup(replacing: .newItem) {
+                Button("New Performance") {
+                    showingAddPerformance = true
+                }
+                .keyboardShortcut("n")
+            }
+        }
     }
     
 }

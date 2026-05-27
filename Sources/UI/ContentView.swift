@@ -9,11 +9,13 @@ import SwiftUI
 import SwiftData
 
 struct ContentView: View {
+    
     @Environment(\.modelContext)
     private var modelContext
     
-    @State
-    private var showingAddPerformance = false
+    @Binding
+    var showingAddPerformance: Bool
+    
     
     var body: some View {
         NavigationStack {
@@ -50,6 +52,6 @@ extension ContentView {
 
 
 #Preview {
-    ContentView()
+    ContentView(showingAddPerformance: .constant(false))
         .modelContainer(ModelContainer.mock(scenario: .basic))
 }
