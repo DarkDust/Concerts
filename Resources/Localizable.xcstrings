@@ -2,7 +2,7 @@
   "sourceLanguage" : "en",
   "strings" : {
     "Add Performance" : {
-      "comment" : "Button to add a performance\nMenu entry to add a new performance)\nTitle of the view for adding a performance\nToolbar button title: add a performance",
+      "comment" : "Button to add a performance\nMenu entry to add a new performance)\nToolbar button title: add a performance",
       "localizations" : {
         "de" : {
           "stringUnit" : {
