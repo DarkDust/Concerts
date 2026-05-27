@@ -11,10 +11,6 @@ import SwiftData
 /// The main app view providing the outer navigation.
 struct MainView: View {
     
-    /// SwiftData model context.
-    @Environment(\.modelContext)
-    private var modelContext
-    
     /// Shared UI state.
     @Environment(AppUIState.self)
     private var uiState: AppUIState
@@ -62,14 +58,12 @@ struct MainView: View {
                 }
             #endif
         }
-        .environment(Repositories(context: modelContext))
         .sheet(item: $uiState.presentedSheet) {
             (sheet) in
             
             switch sheet {
             case .addPerformance:
                 AddPerformanceView()
-                    .environment(Repositories(context: modelContext))
                     .frame(minWidth: 400, minHeight: 100)
                     .presentationDetents([.medium])
             }

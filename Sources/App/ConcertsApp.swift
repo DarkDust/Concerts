@@ -19,7 +19,8 @@ struct ConcertsApp: App {
         WindowGroup {
             MainView()
         }
-        .modelContainer(ModelContainer.create())
+        .modelContainer(SharedModelContainer.instance)
+        .environment(Repositories(context: SharedModelContainer.instance.mainContext))
         .environment(uiState)
         .commands {
             CommandGroup(replacing: .newItem) {
@@ -35,8 +36,23 @@ struct ConcertsApp: App {
         #if os(macOS)
         Settings {
             SettingsView()
+                .navigationTitle("Settings")
+                .modelContainer(SharedModelContainer.instance)
+                .environment(Repositories(context: SharedModelContainer.instance.mainContext))
         }
         #endif
     }
     
+}
+
+
+/// Workaround for a global model container without a stored property in ``ConcertsApp``.
+/// Avoids race conditions with Swift Previews.
+private
+enum SharedModelContainer {
+
+    static let instance: ModelContainer = {
+        ModelContainer.create()
+    }()
+
 }
