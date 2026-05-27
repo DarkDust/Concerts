@@ -160,7 +160,9 @@ extension AddPerformanceView {
                     if results.count == 1, results.first?.name == $0 {
                         return []
                     } else {
-                        return results
+                        return results.sorted {
+                            $0.name.localizedStandardCompare($1.name) == .orderedAscending
+                        }
                     }
                 } catch {
                     return []
@@ -190,7 +192,9 @@ extension AddPerformanceView {
                     if results.count == 1, results.first?.name == $0 {
                         return []
                     } else {
-                        return results
+                        return results.sorted {
+                            $0.name.localizedStandardCompare($1.name) == .orderedAscending
+                        }
                     }
                 } catch {
                     return []
