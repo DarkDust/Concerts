@@ -69,7 +69,7 @@ struct DataTests {
         var haveVisit1 = false
         var haveVisit2 = false
         for visit in visits {
-            switch visit.band.name {
+            switch visit.band?.name {
             case band1.name:
                 haveVisit1 = true
                 
@@ -77,7 +77,7 @@ struct DataTests {
                 haveVisit2 = true
                 
             default:
-                assertionFailure("Unexpected band name: \(visit.band.name)")
+                assertionFailure("Unexpected band name: \(visit.band?.name ?? "?")")
             }
         }
         #expect(haveVisit1)
@@ -134,7 +134,7 @@ struct DataTests {
         var haveVisit1 = false
         var haveVisit2 = false
         for visit in visits {
-            switch visit.band.name {
+            switch visit.band?.name {
             case band1.name:
                 haveVisit1 = true
                 
@@ -142,7 +142,7 @@ struct DataTests {
                 haveVisit2 = true
                 
             default:
-                assertionFailure("Unexpected band name: \(visit.band.name)")
+                assertionFailure("Unexpected band name: \(visit.band?.name ?? "?")")
             }
         }
         #expect(haveVisit1)

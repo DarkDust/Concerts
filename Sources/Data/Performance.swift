@@ -14,22 +14,24 @@ import SwiftData
 final class Performance {
     
     /// Date of the concert.
-    var date: Date
+    var date: Date = Date(timeIntervalSince1970: 0)
     
     /// Chronological order within the day.
-    var sequence: Int
+    var sequence: Int = 0
     
     /// Whether the concert was no seen completely (e.g. arrived later or left early).
-    var partialAttendance: Bool
+    var partialAttendance: Bool = false
     
     /// Optional notes.
     var notes: String?
     
     /// Band playing at the concert.
-    var band: Band
+    @Relationship(deleteRule: .nullify)
+    var band: Band?
     
     /// Venue at which the concert took place.
-    var venue: Venue
+    @Relationship(deleteRule: .nullify)
+    var venue: Venue?
     
     
     /// Default initializer.

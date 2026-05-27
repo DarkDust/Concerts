@@ -13,9 +13,9 @@ import SwiftData
 final class Venue {
     
     /// Name of the venue.
-    var name: String
-    // Note: this should be `@Attribute(.unique)` but that doesn't work, at least not with the
-    // in-memory store: it does not prevent insertion of a duplicate! Same with `#Unique` macro.
+    var name: String = ""
+    // Note: this should be `@Attribute(.unique)` but that doesn't work, not with the in-memory
+    // store and not with iCloud. Same with `#Unique` macro.
     // The uniqueness must therefor be enforced manually in ``VenueRepository``, unfortunately.
     
     /// City in which the venue is located if outside my default city.
@@ -23,7 +23,7 @@ final class Venue {
     
     /// Which concert were visited at the venue.
     @Relationship(inverse: \Performance.venue)
-    var performances: [Performance] = []
+    var performances: [Performance]?
     
     
     /// Default initializer.

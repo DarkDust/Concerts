@@ -13,7 +13,12 @@ extension ModelContainer {
     /// Create model for the app, taking UI testing into account.
     static func create() -> ModelContainer {
         let isTesting = ProcessInfo.processInfo.environment["UITesting"] != nil
-        let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: isTesting)
+        let modelConfiguration: ModelConfiguration
+        if isTesting {
+            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true)
+        } else {
+            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, cloudKitDatabase: .private("net.darkdust.Concerts"))
+        }
         
         do {
             return try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])
