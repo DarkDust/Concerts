@@ -26,18 +26,37 @@ class ConcertsUITests: XCTestCase {
     }
 
     @MainActor
-    func testExample() throws {
+    func testAddPerformance() throws {
         let app = startApp()
         
-//        let itemBeforeClick = findItem(in: app)
-//        XCTAssertFalse(itemBeforeClick.exists)
-//
-        let addItem = findToolbarButton(identifier: "add-item", in: app)
-        XCTAssertTrue(addItem.waitForExistence(timeout: 2))
-        addItem.click()
-//        
-//        let itemAfterClick = findItem(in: app)
-//        XCTAssertTrue(itemAfterClick.exists)
+        // Verify row are missing in table
+        XCTAssertFalse(app.staticTexts["Some Band"].waitForExistence(timeout: 1))
+        XCTAssertFalse(app.staticTexts["Awesome Venue"].waitForExistence(timeout: 1))
+        
+        // Open add sheet
+        let addButton = findToolbarButton(identifier: "add-item", in: app)
+        XCTAssertTrue(addButton.waitForExistence(timeout: 2))
+        addButton.click()
+        
+        // Fill out form
+        let bandNameField = app.textFields["band-name"]
+        XCTAssertTrue(bandNameField.waitForExistence(timeout: 2))
+        bandNameField.click()
+        bandNameField.typeText("Some Band")
+        
+        let venueNameField = app.textFields["venue-name"]
+        XCTAssertTrue(venueNameField.waitForExistence(timeout: 2))
+        venueNameField.click()
+        venueNameField.typeText("Awesome Venue")
+        
+        // Confirm add
+        let confirmButton = app.buttons["Add"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 2))
+        confirmButton.click()
+        
+        // Verify row exists in table
+        XCTAssertTrue(app.staticTexts["Some Band"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Awesome Venue"].waitForExistence(timeout: 2))
     }
 
 }

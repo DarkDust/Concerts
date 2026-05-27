@@ -46,8 +46,10 @@ struct AddPerformanceView: View {
                     .datePickerStyle(.compact)
                     
                     TextField("Band", text: $bandName)
+                        .accessibilityIdentifier("band-name")
                     
                     TextField("Venue", text: $venueName)
+                        .accessibilityIdentifier("venue-name")
                 }
             }
             .padding()
