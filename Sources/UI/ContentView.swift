@@ -64,5 +64,5 @@ extension ContentView {
 
 #Preview {
     ContentView()
-        .modelContainer(ModelContainer.mock())
+        .modelContainer(ModelContainer.mock(scenario: .basic))
 }

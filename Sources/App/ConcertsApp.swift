@@ -11,13 +11,11 @@ import SwiftData
 @main
 struct ConcertsApp: App {
     
-    /// The main SwiftData model container.
-    var sharedModelContainer = ModelContainer.create()
-
     var body: some Scene {
         WindowGroup {
             ContentView()
         }
-        .modelContainer(sharedModelContainer)
+        .modelContainer(ModelContainer.create())
     }
+    
 }

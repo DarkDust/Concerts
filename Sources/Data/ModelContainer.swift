@@ -13,9 +13,11 @@ extension ModelContainer {
     /// Create model for the app, taking UI testing into account.
     static func create() -> ModelContainer {
         let isTesting = ProcessInfo.processInfo.environment["UITesting"] != nil
+        let isPreview = ProcessInfo.processInfo.environment["XCODE_RUNNING_FOR_PREVIEWS"] != nil
+        
         let modelConfiguration: ModelConfiguration
-        if isTesting {
-            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true)
+        if isTesting || isPreview {
+            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         } else {
             modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, cloudKitDatabase: .private("iCloud.net.darkdust.Concerts"))
         }
@@ -31,7 +33,7 @@ extension ModelContainer {
     /// Create model for SwiftUI previews.
     @MainActor
     static func mock(scenario: Repositories.MockScenario = .empty) -> ModelContainer {
-        let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true)
+        let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
         
         do {
             let container = try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])

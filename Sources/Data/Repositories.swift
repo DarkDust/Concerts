@@ -56,7 +56,14 @@ extension Repositories {
             break
             
         case .basic:
-            let date1 = DateComponents(year: 2025, month: 12, day: 1).date!
+            let date2 = DateComponents(calendar: .current, year: 2026, month: 2, day: 14).date!
+            let band4 = try! repositories.bands.create(name: "EMMON")
+            let band5 = try! repositories.bands.create(name: "Klangstabil")
+            let venue2 = try! repositories.venues.create(name: "Feierwerk")
+            _ = try! repositories.performances.add(band: band4, venue: venue2, date: date2)
+            _ = try! repositories.performances.add(band: band5, venue: venue2, date: date2)
+            
+            let date1 = DateComponents(calendar: .current, year: 2025, month: 12, day: 1).date!
             let band1 = try! repositories.bands.create(name: "GOST")
             let band2 = try! repositories.bands.create(name: "Kælan Mikla")
             let band3 = try! repositories.bands.create(name: "Pertubator")
@@ -64,13 +71,6 @@ extension Repositories {
             _ = try! repositories.performances.add(band: band1, venue: venue1, date: date1)
             _ = try! repositories.performances.add(band: band2, venue: venue1, date: date1)
             _ = try! repositories.performances.add(band: band3, venue: venue1, date: date1)
-            
-            let date2 = DateComponents(year: 2026, month: 2, day: 14).date!
-            let band4 = try! repositories.bands.create(name: "EMMON")
-            let band5 = try! repositories.bands.create(name: "Klangstabil")
-            let venue2 = try! repositories.venues.create(name: "Feierwerk")
-            _ = try! repositories.performances.add(band: band4, venue: venue2, date: date2)
-            _ = try! repositories.performances.add(band: band5, venue: venue2, date: date2)
         }
         
         return repositories
