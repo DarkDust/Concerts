@@ -39,30 +39,60 @@ struct AddPerformanceView: View {
             Form {
                 Section {
                     DatePicker(
-                        "Date",
+                        LocalizedStringResource(
+                            "Date",
+                            comment: "Title for the date picker when adding a new performance"
+                        ),
                         selection: $date,
                         displayedComponents: [.date]
                     )
                     .datePickerStyle(.compact)
                     
-                    TextField("Band", text: $bandName)
-                        .accessibilityIdentifier("band-name")
+                    TextField(
+                        String(
+                            localized: "Band",
+                            comment: "Name of the band for which to add a performance"
+                        ),
+                        text: $bandName
+                    )
+                    .accessibilityIdentifier("band-name")
                     
-                    TextField("Venue", text: $venueName)
-                        .accessibilityIdentifier("venue-name")
+                    TextField(
+                        String(
+                            localized: "Venue",
+                            comment: "Name of the venue or event for which to add a performance"
+                        ),
+                        text: $venueName
+                    )
+                    .accessibilityIdentifier("venue-name")
                 }
             }
             .padding()
-            .navigationTitle("Add Performance")
+            .navigationTitle(
+                LocalizedStringResource(
+                    "Add Performance",
+                    comment: "Title of the view for adding a performance"
+                )
+            )
             .toolbar {
                 ToolbarItem(placement: .cancellationAction) {
-                    Button("Cancel") {
+                    Button(
+                        LocalizedStringResource(
+                            "Cancel",
+                            comment: "Label for cancelling adding a performance"
+                        )
+                    ) {
                         dismiss()
                     }
                 }
                 
                 ToolbarItem(placement: .confirmationAction) {
-                    Button("Add") {
+                    Button(
+                        LocalizedStringResource(
+                            "Add Performance",
+                            comment: "Button to add a performance"
+                        )
+                    ) {
                         addPerformance()
                     }
                     .disabled(

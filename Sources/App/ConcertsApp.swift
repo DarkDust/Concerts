@@ -23,7 +23,9 @@ struct ConcertsApp: App {
         .modelContainer(ModelContainer.create())
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button("New Performance") {
+                Button(
+                    LocalizedStringResource("Add Performance", comment: "Menu entry to add a new performance)")
+                ) {
                     showingAddPerformance = true
                 }
                 .keyboardShortcut("n")

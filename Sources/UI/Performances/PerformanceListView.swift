@@ -38,15 +38,23 @@ extension PerformanceListView {
         
         var body: some View {
             Table(performances) {
-                TableColumn("Band") {
-                    Text($0.band?.name ?? "Unknown")
+                TableColumn(
+                    LocalizedStringResource("Band", comment: "Table column title: Band name")
+                ) {
+                    Text(
+                        $0.band?.name ?? String(localized: "Unknown", comment: "Unknown band name")
+                    )
                 }
                 
-                TableColumn("Venue") {
-                    Text($0.venue?.name ?? "Unknown")
+                TableColumn(
+                    LocalizedStringResource("Venue", comment: "Table column title: Venue name")
+                ) {
+                    Text($0.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
                 }
                 
-                TableColumn("Date") {
+                TableColumn(
+                    LocalizedStringResource("Date", comment: "Table column title: Performance date")
+                ) {
                     Text($0.date, format: .dateTime.year().month().day())
                 }
                 .width(100)
@@ -62,11 +70,11 @@ extension PerformanceListView {
                 (performance) in
                 
                 VStack(alignment: .leading, spacing: 4) {
-                    Text(performance.band?.name ?? "Unknown")
+                    Text(performance.band?.name ?? String(localized: "Unknown", comment: "Unknown band name"))
                         .font(.headline)
                     
                     HStack() {
-                        Text(performance.venue?.name ?? "Unknown")
+                        Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
                             .font(.subheadline)
                             .foregroundStyle(.secondary)
                         

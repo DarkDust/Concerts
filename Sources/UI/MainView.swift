@@ -24,27 +24,39 @@ struct MainView: View {
         TabView {
             PerformanceListView()
                 .tabItem {
-                    Label("Performances", systemImage: "music.note.list")
+                    Label(
+                        LocalizedStringResource("Performances", comment: "Tab view title: list of performances"),
+                        systemImage: "music.note.list"
+                    )
                 }
                 .toolbar {
                     ToolbarItem {
                         Button(action: addItem) {
-                            Label("Add Item", systemImage: "plus")
-                                .accessibilityIdentifier("add-item")
+                            Label(
+                                LocalizedStringResource("Add Performance", comment: "Toolbar button title: add a performance"),
+                                systemImage: "plus"
+                            )
+                            .accessibilityIdentifier("add-item")
                         }
                     }
                 }
             
             StatisticsView()
                 .tabItem {
-                    Label("Statistics", systemImage: "chart.bar")
+                    Label(
+                        LocalizedStringResource("Statistics", comment: "Tab view title: statistics"),
+                        systemImage: "chart.bar"
+                    )
                 }
             
             // On macOS, this is a `Settings` scene in `ConcertsApp`.
             #if os(iOS)
             SettingsView()
                 .tabItem {
-                    Label("Settings", systemImage: "gearshape")
+                    Label(
+                        LocalizedStringResource("Settings", comment: "Tab view title: settings"),
+                        systemImage: "gearshape"
+                    )
                 }
             #endif
         }
