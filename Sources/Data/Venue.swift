@@ -11,9 +11,12 @@ import SwiftData
 /// Venue or event (festival).
 @Model
 final class Venue {
+    
     /// Name of the venue.
-    @Attribute(.unique)
     var name: String
+    // Note: this should be `@Attribute(.unique)` but that doesn't work, at least not with the
+    // in-memory store: it does not prevent insertion of a duplicate! Same with `#Unique` macro.
+    // The uniqueness must therefor be enforced manually in ``VenueRepository``, unfortunately.
     
     /// City in which the venue is located if outside my default city.
     var city: String?
@@ -28,4 +31,5 @@ final class Venue {
         self.name = name
         self.city = city
     }
+    
 }

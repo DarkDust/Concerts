@@ -36,6 +36,7 @@ struct ContentView: View {
         } detail: {
             Text("Select an item")
         }
+        .environment(Repositories(context: modelContext))
     }
     
 }

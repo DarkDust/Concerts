@@ -10,9 +10,12 @@ import SwiftData
 /// A band.
 @Model
 final class Band {
+    
     /// Name of the band.
-    @Attribute(.unique)
     var name: String
+    // Note: this should be `@Attribute(.unique)` but that doesn't work, at least not with the
+    // in-memory store: it does not prevent insertion of a duplicate! Same with `#Unique` macro.
+    // The uniqueness must therefor be enforced manually in ``BandRepository``, unfortunately.
     
     /// Concert visits.
     @Relationship(inverse: \Performance.band)

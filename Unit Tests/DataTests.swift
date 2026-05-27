@@ -12,7 +12,7 @@ import Testing
 struct DataTests {
     
     @Test
-    func testAddVisits() throws {
+    func testAddVisitsRaw() throws {
         let container = ModelContainer.mock()
         let context = ModelContext(container)
         
@@ -84,4 +84,98 @@ struct DataTests {
         #expect(haveVisit2)
     }
     
+    
+    @Test @MainActor
+    func testAddVisitsRepositories() throws {
+        let container = ModelContainer.mock()
+        let context = ModelContext(container)
+        let repositories = Repositories(context: context)
+        
+        // Create and insert band
+        let band1 = try repositories.bands.create(name: "In Strict Confidence")
+        let band2 = try repositories.bands.create(name: "Suicide Commando")
+        #expect(band1.id != band2.id)
+
+        // Fetch bands back
+        let bands = try repositories.bands.fetchAll()
+        #expect(bands.count == 2)
+        var haveBand1 = false
+        var haveBand2 = false
+        for band in bands {
+            if band.name == "In Strict Confidence" {
+                haveBand1 = true
+            }
+            if band.name == "Suicide Commando" {
+                haveBand2 = true
+            }
+        }
+        #expect(haveBand1)
+        #expect(haveBand2)
+        
+        // Create venue
+        let venue = try repositories.venues.create(name: "Backstage Werk")
+        
+        // Fetch venue back
+        let venues = try repositories.venues.fetchAll()
+        #expect(venues.count == 1)
+        #expect(venues.first?.name == "Backstage Werk")
+        
+        // Create visits, one after another
+        let date = Date.now
+        let visit1 = try repositories.performances.add(band: band1, venue: venue, date: date)
+        #expect(visit1.sequence == 1)
+        
+        let visit2 = try repositories.performances.add(band: band2, venue: venue, date: date)
+        #expect(visit2.sequence == 2)
+
+        // Fetch visits back
+        let visits = try repositories.performances.fetchAll()
+        #expect(visits.count == 2)
+        var haveVisit1 = false
+        var haveVisit2 = false
+        for visit in visits {
+            switch visit.band.name {
+            case band1.name:
+                haveVisit1 = true
+                
+            case band2.name:
+                haveVisit2 = true
+                
+            default:
+                assertionFailure("Unexpected band name: \(visit.band.name)")
+            }
+        }
+        #expect(haveVisit1)
+        #expect(haveVisit2)
+    }
+    
+    
+    @Test @MainActor
+    func testDuplicateNames() throws {
+        let container = ModelContainer.mock()
+        let context = ModelContext(container)
+        let repositories = Repositories(context: context)
+        
+        let _ = try repositories.bands.create(name: "Zanias")
+        let bandError = #expect(throws: RepositoryError.self) {
+            _ = try repositories.bands.create(name: "Zanias")
+        }
+        #expect(isDuplicateEntryError(bandError))
+        
+        _ = try repositories.venues.create(name: "Milla")
+        let venueError = #expect(throws: RepositoryError.self) {
+            _ = try repositories.venues.create(name: "Milla")
+        }
+        #expect(isDuplicateEntryError(venueError))
+    }
+    
+}
+
+
+func isDuplicateEntryError(_ error: (any Error)?) -> Bool {
+    guard case .duplicateEntry = error as? RepositoryError else {
+        return false
+    }
+
+    return true
 }
