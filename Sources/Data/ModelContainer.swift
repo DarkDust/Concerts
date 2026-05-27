@@ -17,7 +17,7 @@ extension ModelContainer {
         if isTesting {
             modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true)
         } else {
-            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, cloudKitDatabase: .private("net.darkdust.Concerts"))
+            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, cloudKitDatabase: .private("iCloud.net.darkdust.Concerts"))
         }
         
         do {
@@ -29,11 +29,14 @@ extension ModelContainer {
     
     
     /// Create model for SwiftUI previews.
-    static func mock() -> ModelContainer {
+    @MainActor
+    static func mock(scenario: Repositories.MockScenario = .empty) -> ModelContainer {
         let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true)
         
         do {
-            return try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])
+            let container = try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])
+            Repositories.mock(scenario: scenario, container: container)
+            return container
         } catch {
             fatalError("Could not create ModelContainer: \(error)")
         }
