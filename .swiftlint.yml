@@ -1,5 +1,6 @@
 disabled_rules:
   - closure_parameter_position
+  - large_tuple
   - trailing_comma
   - trailing_whitespace
 
