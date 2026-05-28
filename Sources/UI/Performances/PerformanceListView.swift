@@ -65,6 +65,7 @@ extension PerformanceListView {
                 }
                 .width(100)
             }
+            .background(TableScroller(performances: performances))
         }
     }
     
@@ -94,6 +95,73 @@ extension PerformanceListView {
             }
         }
     }
+}
+
+
+/// Stupid hack to find the `NSTableView` and scroll it to the bottom.
+///
+/// SwiftUI's `Table` is supposed to work with a `ScrollViewReader`/`ScrollViewProxy`, and legend has it that it
+/// worked. But it does not work in macOS 26!
+///
+/// The `Table` is still backed by a `NSTableView`, thankfully, so what this hack does is walking the whole view
+/// hierarychy of the window to find the table, and then scrolls it to the bottom.
+///
+/// Obviously this will fail when:
+/// * Apple does not use a `NSTableView` for `Table` any more.
+/// * You have more than one `Table` in your window.
+///
+/// Another downside is that you see the table in its unscrolled position for a short time.
+struct TableScroller: NSViewRepresentable {
+    /// Dummy property: once the performances change (we've added a performance), also scroll to the bottom.
+    var performances: [Performance]
+    
+    func makeNSView(context: Context) -> NSView {
+        let view = NSView()
+        scrollToBottom(view: view)
+        return view
+    }
+    
+    func updateNSView(_ view: NSView, context: Context) {
+        scrollToBottom(view: view)
+    }
+    
+    private
+    func scrollToBottom(view: NSView) {
+        DispatchQueue.main.async {
+            let root = findRootView(of: view)
+            guard let tableView = findTableView(in: root) else { return }
+            
+            let lastRow = tableView.numberOfRows - 1
+            guard lastRow >= 0 else { return }
+            
+            tableView.scrollRowToVisible(lastRow)
+        }
+    }
+    
+    private
+    func findTableView(in view: NSView) -> NSTableView? {
+        if let table = view as? NSTableView {
+            return table
+        }
+        
+        for subview in view.subviews {
+            if let found = findTableView(in: subview) {
+                return found
+            }
+        }
+        
+        return nil
+    }
+    
+    private
+    func findRootView(of view: NSView) -> NSView {
+        var cursor = view
+        while let superview = cursor.superview {
+            cursor = superview
+        }
+        return cursor
+    }
+    
 }
 
 private
