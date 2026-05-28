@@ -79,6 +79,35 @@ extension PerformanceListView {
         
         var body: some View {
             ZStack(alignment: .bottomTrailing) {
+                ListView(performances: performances)
+                
+                Button {
+                    appUIState.presentedSheet = .addPerformance
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .padding()
+                }
+                .buttonStyle(.borderedProminent)
+                .clipShape(Circle())
+                .padding()
+            }
+        }
+    }
+}
+
+private
+extension PerformanceListView {
+    
+    /// Helper view: the actual iOS list view implementation.
+    struct ListView: View {
+        
+        let performances: [Performance]
+        
+        var body: some View {
+            ScrollViewReader {
+                (proxy) in
+                
                 List(performances) {
                     (performance) in
                     
@@ -104,22 +133,26 @@ extension PerformanceListView {
                             .partialAttendance(performance.partialAttendance)
                         }
                     }
+                    .id(performance)
                 }
-                
-                Button {
-                    appUIState.presentedSheet = .addPerformance
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .padding()
+                .safeAreaInset(edge: .bottom) {
+                    // Empty transparent inset
+                    Color.clear
+                        .frame(height: 80)
                 }
-                .buttonStyle(.borderedProminent)
-                .clipShape(Circle())
-                .padding()
+                .onAppear {
+                    if let last = performances.last {
+                        // Scroll to bottom. The anchor point is "lower" than .bottom to absolutely scroll to the
+                        // bottom. With .bottom, there are a few pixels left to scroll.
+                        proxy.scrollTo(last, anchor: UnitPoint(x: 0.5, y: 1.5))
+                    }
+                }
             }
         }
     }
+    
 }
+
 
 private
 struct PartialAttendanceModifier: ViewModifier {
