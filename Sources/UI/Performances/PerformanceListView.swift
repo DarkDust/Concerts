@@ -33,6 +33,7 @@ struct PerformanceListView: View {
 }
 
 
+#if os(macOS)
 private
 extension PerformanceListView {
     
@@ -69,32 +70,6 @@ extension PerformanceListView {
         }
     }
     
-    
-    /// List view for iOS using a simple list.
-    struct ContentiOS: View {
-        let performances: [Performance]
-        
-        @Environment(AppUIState.self) private
-        var appUIState: AppUIState
-        
-        
-        var body: some View {
-            ZStack(alignment: .bottomTrailing) {
-                ListView(performances: performances)
-                
-                Button {
-                    appUIState.presentedSheet = .addPerformance
-                } label: {
-                    Image(systemName: "plus")
-                        .font(.title2)
-                        .padding()
-                }
-                .buttonStyle(.borderedProminent)
-                .clipShape(Circle())
-                .padding()
-            }
-        }
-    }
 }
 
 
@@ -163,9 +138,39 @@ struct TableScroller: NSViewRepresentable {
     }
     
 }
+#endif
 
+
+#if os(iOS)
 private
 extension PerformanceListView {
+    
+    /// List view for iOS using a simple list.
+    struct ContentiOS: View {
+        let performances: [Performance]
+        
+        @Environment(AppUIState.self) private
+        var appUIState: AppUIState
+        
+        
+        var body: some View {
+            ZStack(alignment: .bottomTrailing) {
+                ListView(performances: performances)
+                
+                Button {
+                    appUIState.presentedSheet = .addPerformance
+                } label: {
+                    Image(systemName: "plus")
+                        .font(.title2)
+                        .padding()
+                }
+                .buttonStyle(.borderedProminent)
+                .clipShape(Circle())
+                .padding()
+            }
+        }
+    }
+    
     
     /// Helper view: the actual iOS list view implementation.
     struct ListView: View {
@@ -220,6 +225,7 @@ extension PerformanceListView {
     }
     
 }
+#endif
 
 
 private
