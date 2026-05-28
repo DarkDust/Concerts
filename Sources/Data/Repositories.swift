@@ -48,6 +48,7 @@ extension Repositories {
     /// Create and optionally prefill repositories for mocking.
     @discardableResult @MainActor
     static func mock(scenario: MockScenario, container: ModelContainer) -> Repositories {
+        // swiftlint:disable force_try
         let context = container.mainContext
         let repositories = Repositories(context: context)
         
@@ -80,6 +81,7 @@ extension Repositories {
         }
         
         return repositories
+        // swiftlint:enable force_try
     }
     
 }

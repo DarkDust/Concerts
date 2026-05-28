@@ -31,7 +31,10 @@ struct MainView: View {
                     ToolbarItem {
                         Button(action: addItem) {
                             Label(
-                                LocalizedStringResource("Add Performance", comment: "Toolbar button title: add a performance"),
+                                LocalizedStringResource(
+                                    "Add Performance",
+                                    comment: "Toolbar button title: add a performance"
+                                ),
                                 systemImage: "plus"
                             )
                             .accessibilityIdentifier("add-item")

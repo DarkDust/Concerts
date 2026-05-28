@@ -17,9 +17,16 @@ extension ModelContainer {
         
         let modelConfiguration: ModelConfiguration
         if isTesting || isPreview {
-            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+            modelConfiguration = ModelConfiguration(
+                schema: Self.concertsSchema,
+                isStoredInMemoryOnly: true,
+                cloudKitDatabase: .none
+            )
         } else {
-            modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, cloudKitDatabase: .private("iCloud.net.darkdust.Concerts"))
+            modelConfiguration = ModelConfiguration(
+                schema: Self.concertsSchema,
+                cloudKitDatabase: .private("iCloud.net.darkdust.Concerts")
+            )
         }
         
         do {
@@ -33,7 +40,11 @@ extension ModelContainer {
     /// Create model for SwiftUI previews.
     @MainActor
     static func mock(scenario: Repositories.MockScenario = .empty) -> ModelContainer {
-        let modelConfiguration = ModelConfiguration(schema: Self.concertsSchema, isStoredInMemoryOnly: true, cloudKitDatabase: .none)
+        let modelConfiguration = ModelConfiguration(
+            schema: Self.concertsSchema,
+            isStoredInMemoryOnly: true,
+            cloudKitDatabase: .none
+        )
         
         do {
             let container = try ModelContainer(for: Self.concertsSchema, configurations: [modelConfiguration])

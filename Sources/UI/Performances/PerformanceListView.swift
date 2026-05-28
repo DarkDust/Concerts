@@ -73,8 +73,8 @@ extension PerformanceListView {
     struct ContentiOS: View {
         let performances: [Performance]
         
-        @Environment(AppUIState.self)
-        private var appUIState: AppUIState
+        @Environment(AppUIState.self) private
+        var appUIState: AppUIState
         
         
         var body: some View {
@@ -87,7 +87,7 @@ extension PerformanceListView {
                             .font(.headline)
                             .partialAttendance(performance.partialAttendance)
                         
-                        HStack() {
+                        HStack {
                             Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
                                 .font(.subheadline)
                                 .foregroundStyle(.secondary)

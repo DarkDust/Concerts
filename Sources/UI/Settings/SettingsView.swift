@@ -50,7 +50,10 @@ struct SettingsView: View {
                 LocalizedStringResource("CSV Import", comment: "Settings section about importing CSV files")
             ) {
                 Toggle(
-                    LocalizedStringResource("Ignore first line", comment: "Checkbox to skip the header row in CSV files"),
+                    LocalizedStringResource(
+                        "Ignore first line",
+                        comment: "Checkbox to skip the header row in CSV files"
+                    ),
                     isOn: $ignoreFirstLineInCSV
                 )
                 .toggleStyle(.checkbox)

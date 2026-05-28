@@ -51,8 +51,8 @@ struct AddPerformanceView: View {
     var partialAttendance: Bool = false
     
     /// Used to move input focus to the band name when sheet is presented.
-    @FocusState
-    private var focusedField: Field?
+    @FocusState private
+    var focusedField: Field?
     
     
     var body: some View {
@@ -135,7 +135,12 @@ extension AddPerformanceView {
         do {
             let band = try repositories.bands.create(name: bandName)
             let venue = try repositories.venues.create(name: venueName)
-            _ = try repositories.performances.add(band: band, venue: venue, date: date, partialAttendance: partialAttendance)
+            _ = try repositories.performances.add(
+                band: band,
+                venue: venue,
+                date: date,
+                partialAttendance: partialAttendance
+            )
             dismiss()
         } catch {
             // TODO: Present alert
