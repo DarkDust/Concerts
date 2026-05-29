@@ -27,20 +27,6 @@ struct MainView: View {
                         systemImage: "music.note.list"
                     )
                 }
-                .toolbar {
-                    ToolbarItem {
-                        Button(action: addItem) {
-                            Label(
-                                LocalizedStringResource(
-                                    "Add Performance",
-                                    comment: "Toolbar button title: add a performance"
-                                ),
-                                systemImage: "plus"
-                            )
-                            .accessibilityIdentifier("add-item")
-                        }
-                    }
-                }
             
             StatisticsView()
                 .tabItem {
@@ -71,16 +57,6 @@ struct MainView: View {
                     .presentationDetents([.medium])
             }
         }
-    }
-    
-}
-
-
-private
-extension MainView {
-    
-    func addItem() {
-        uiState.presentedSheet = .addPerformance
     }
     
 }

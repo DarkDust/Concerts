@@ -23,6 +23,9 @@ extension PerformanceListView {
         @Environment(Repositories.self) private
         var repositories: Repositories
         
+        @Environment(AppUIState.self) private
+        var uiState: AppUIState
+        
         @State private
         var alert: AlertFactory.Kind?
         
@@ -60,6 +63,20 @@ extension PerformanceListView {
             }
             .background(TableScroller(performances: performances))
             .alert(kind: $alert)
+            .toolbar {
+                ToolbarItem {
+                    Button(action: addItem) {
+                        Label(
+                            LocalizedStringResource(
+                                "Add Performance",
+                                comment: "Toolbar button title: add a performance"
+                            ),
+                            systemImage: "plus"
+                        )
+                        .accessibilityIdentifier("add-item")
+                    }
+                }
+            }
             .onDeleteCommand {
                 guard
                     let selection,
@@ -75,6 +92,16 @@ extension PerformanceListView {
                 }
             }
         }
+    }
+    
+}
+
+
+private
+extension PerformanceListView.ContentMacOS {
+    
+    func addItem() {
+        uiState.presentedSheet = .addPerformance
     }
     
 }

@@ -23,11 +23,11 @@ struct PerformanceListView: View {
     
     
     var body: some View {
-        #if os(iOS)
+#if os(iOS)
         ContentiOS(performances: performances)
-        #else
+#else
         ContentMacOS(performances: performances)
-        #endif
+#endif
     }
     
 }
