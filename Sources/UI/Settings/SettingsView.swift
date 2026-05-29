@@ -26,21 +26,12 @@ struct SettingsView: View {
     @State private
     var showingImporter = false
     
-    /// Error message for an alert.
     @State private
-    var errorMessage: String?
-    
-    /// Status message for an alert.
-    @State private
-    var statusMessage: String?
+    var alert: AlertFactory.Kind?
     
     /// Progress of the import operation.
     @State private
     var importProgress: Progress?
-    
-    /// Whether the delete confirmation alert is shown.
-    @State private
-    var showingDeleteAlert = false
     
     
     var body: some View {
@@ -85,7 +76,9 @@ struct SettingsView: View {
                 LocalizedStringResource("Data Management", comment: "Settings section about managing the app's data")
             ) {
                 Button(LocalizedStringResource("Delete all data…", comment: "Button to delete all app data")) {
-                    showingDeleteAlert = true
+                    self.alert = .confirmDeleteAllData(commit: {
+                        deleteEverything()
+                    })
                 }
             }
         }
@@ -95,45 +88,7 @@ struct SettingsView: View {
         .frame(width: 480)
         .fixedSize(horizontal: false, vertical: true)
 #endif
-        
-        .alert(
-            "Import Failed",
-            isPresented: Binding(
-                get: { errorMessage != nil },
-                set: { if !$0 { errorMessage = nil } }
-            )
-        ) {
-            Button("OK") { }
-        } message: {
-            Text(errorMessage ?? "")
-        }
-        
-        .alert(
-            "Import Complete",
-            isPresented: Binding(
-                get: { statusMessage != nil },
-                set: { if !$0 { statusMessage = nil } }
-            )
-        ) {
-            Button("OK") { }
-        } message: {
-            Text(statusMessage ?? "")
-        }
-        
-        .alert(
-            "Delete All Data?",
-            isPresented: $showingDeleteAlert
-        ) {
-            Button("Delete", role: .destructive) {
-                deleteEverything()
-            }
-            
-            Button("Cancel", role: .cancel) { }
-            
-        } message: {
-            Text("This action cannot be undone.")
-        }
-        
+        .alert(kind: $alert)
         .sheet(isPresented: Binding(
             get: { importProgress != nil },
             set: { if !$0 { importProgress = nil } }
@@ -156,7 +111,7 @@ extension SettingsView {
     func importCSV(at url: URL) {
         do {
             guard url.startAccessingSecurityScopedResource() else {
-                errorMessage = String(localized: "Failed to access the file.")
+                alert = .importFailedWithMessage(message: String(localized: "Failed to access the file."))
                 return
             }
             defer { url.stopAccessingSecurityScopedResource() }
@@ -169,17 +124,17 @@ extension SettingsView {
             }
             
             guard !lines.isEmpty else {
-                errorMessage = String(localized: "Empty CSV file.")
+                alert = .importFailedWithMessage(message: String(localized: "Empty CSV file."))
                 return
             }
             
             self.importProgress = repositories.importCSV(lines: lines) {
                 self.importProgress = nil
-                self.statusMessage = $0
+                self.alert = .importCompleted(message: $0)
             }
             
         } catch {
-            errorMessage = error.localizedDescription
+            alert = .importFailedWithError(error)
         }
     }
     
@@ -195,7 +150,7 @@ extension SettingsView {
             try repositories.deleteEverything()
         } catch {
             // TODO: Will show a wrong title for the alert (import).
-            errorMessage = error.localizedDescription
+            alert = .importFailedWithError(error)
         }
     }
     
