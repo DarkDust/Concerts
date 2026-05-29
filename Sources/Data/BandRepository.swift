@@ -76,4 +76,27 @@ final class BandRepository {
         try context.save()
     }
     
+    
+    /// Delete a band.
+    ///
+    /// - warning: Check whether it's orphaned first via ``isOrphaned(_:)``.
+    func delete(_ band: Band) throws {
+        context.delete(band)
+        try context.save()
+    }
+    
+    
+    /// Checks whether any ``Performance`` still references the given band.
+    /// This is supposed to be more robust than relying on ``Band/performances`` because it does not rely on the
+    /// in-memory relationships.
+    func isOrphaned(_ band: Band) throws -> Bool {
+        let id = band.id
+        let descriptor = FetchDescriptor<Performance>(
+            predicate: #Predicate {
+                $0.band?.id == id
+            }
+        )
+        return try context.fetchCount(descriptor) == 0
+    }
+    
 }

@@ -136,6 +136,17 @@
         }
       }
     },
+    "Deleting performance failed" : {
+      "comment" : "Alert title shown when deleting a specific performance fails.",
+      "localizations" : {
+        "de" : {
+          "stringUnit" : {
+            "state" : "translated",
+            "value" : "Auftritt löschen fehlgeschlagen"
+          }
+        }
+      }
+    },
     "Empty CSV file." : {
       "comment" : "Error shown when the imported CSV file has no content.",
       "localizations" : {

@@ -58,4 +58,13 @@ final class PerformanceRepository {
         try context.save()
     }
     
+    
+    /// Delete a performance.
+    ///
+    /// - note: Don't call this directly. Use ``Repositories/delete(_:)`` instead.
+    func delete(_ performance: Performance) throws {
+        context.delete(performance)
+        try context.save()
+    }
+    
 }

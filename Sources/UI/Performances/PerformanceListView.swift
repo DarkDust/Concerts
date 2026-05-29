@@ -41,8 +41,18 @@ extension PerformanceListView {
     struct ContentMacOS: View {
         let performances: [Performance]
         
+        @State private
+        var selection: Performance.ID?
+        
+        @Environment(Repositories.self) private
+        var repositories: Repositories
+        
+        @State private
+        var alert: AlertFactory.Kind?
+        
+        
         var body: some View {
-            Table(performances) {
+            Table(performances, selection: $selection) {
                 TableColumn(
                     LocalizedStringResource("Band", comment: "Table column header for band name")
                 ) {
@@ -73,6 +83,21 @@ extension PerformanceListView {
                 .width(100)
             }
             .background(TableScroller(performances: performances))
+            .alert(kind: $alert)
+            .onDeleteCommand {
+                guard
+                    let selection,
+                    let performance = performances.first(where: { $0.id == selection })
+                else {
+                    return
+                }
+                
+                do {
+                    try repositories.delete(performance)
+                } catch {
+                    alert = .deletePerformanceFailed(error)
+                }
+            }
         }
     }
     
@@ -183,6 +208,13 @@ extension PerformanceListView {
         
         let performances: [Performance]
         
+        @Environment(Repositories.self) private
+        var repositories: Repositories
+        
+        @State private
+        var alert: AlertFactory.Kind?
+        
+        
         var body: some View {
             ScrollViewReader {
                 (proxy) in
@@ -219,12 +251,21 @@ extension PerformanceListView {
                         }
                     }
                     .id(performance)
+                    .swipeActions(edge: .trailing) {
+                        Button(role: .destructive) {
+                            delete(performance)
+                        } label: {
+                            Label("Delete", systemImage: "trash")
+                            // Button label to delete the performance
+                        }
+                    }
                 }
                 .safeAreaInset(edge: .bottom) {
                     // Empty transparent inset
                     Color.clear
                         .frame(height: 80)
                 }
+                .alert(kind: $alert)
                 .onAppear {
                     if let last = performances.last {
                         // Scroll to bottom. The anchor point is "lower" than .bottom to absolutely scroll to the
@@ -232,6 +273,16 @@ extension PerformanceListView {
                         proxy.scrollTo(last, anchor: UnitPoint(x: 0.5, y: 1.5))
                     }
                 }
+            }
+        }
+        
+        
+        private
+        func delete(_ performance: Performance) {
+            do {
+                try repositories.delete(performance)
+            } catch {
+                alert = .deletePerformanceFailed(error)
             }
         }
     }

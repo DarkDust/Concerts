@@ -76,4 +76,28 @@ final class VenueRepository {
         try context.save()
     }
     
+    
+    /// Delete a venue.
+    ///
+    /// - warning: Check whether it's orphaned first via ``isOrphaned(_:)``.
+    func delete(_ venue: Venue) throws {
+        context.delete(venue)
+        try context.save()
+    }
+    
+    
+    /// Checks whether any ``Performance`` still references the given band.
+    /// This is supposed to be more robust than relying on ``Venue/performances`` because it does not rely on the
+    /// in-memory relationships.
+    func isOrphaned(_ venue: Venue) throws -> Bool {
+        let id = venue.id
+        let descriptor = FetchDescriptor<Performance>(
+            predicate: #Predicate {
+                $0.venue?.id == id
+            }
+        )
+        
+        return try context.fetchCount(descriptor) == 0
+    }
+    
 }
