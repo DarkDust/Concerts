@@ -149,8 +149,7 @@ extension SettingsView {
         do {
             try repositories.deleteEverything()
         } catch {
-            // TODO: Will show a wrong title for the alert (import).
-            alert = .importFailedWithError(error)
+            alert = .deleteAllDataFailed(error)
         }
     }
     

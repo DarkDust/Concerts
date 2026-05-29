@@ -54,6 +54,10 @@ struct AddPerformanceView: View {
     @FocusState private
     var focusedField: Field?
     
+    /// Alert to show.
+    @State private
+    var alert: AlertFactory.Kind?
+    
     
     var body: some View {
         NavigationStack {
@@ -119,6 +123,7 @@ struct AddPerformanceView: View {
                     )
                 }
             }
+            .alert(kind: $alert)
             .onAppear {
                 focusedField = .bandName
             }
@@ -143,7 +148,7 @@ extension AddPerformanceView {
             )
             dismiss()
         } catch {
-            // TODO: Present alert
+            alert = .addPerformanceFailed(error)
         }
     }
     

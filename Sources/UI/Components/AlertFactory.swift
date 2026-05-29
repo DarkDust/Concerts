@@ -36,6 +36,10 @@ struct AlertFactory {
         case importCompleted(message: String)
         /// Confirm deletion of all data.
         case confirmDeleteAllData(commit: @MainActor () -> Void)
+        /// Deleting all data failed.
+        case deleteAllDataFailed(any Error)
+        /// Adding a performance failed.
+        case addPerformanceFailed(any Error)
     }
     
 }
@@ -72,13 +76,26 @@ extension AlertFactory.Kind {
                 localized: "Delete All Data?",
                 comment: "Confirmation alert title that asks the user if they want to delete all their data."
             )
+            
+        case .deleteAllDataFailed:
+            return String(
+                localized: "Deleting all data failed",
+                comment: "Title for an alert that appears when an attempt to delete all app data fails."
+            )
+            
+        case .addPerformanceFailed:
+            return String(
+                localized: "Failed to add performance",
+                comment: "Title for an alert that appears when an attempt to add a performance fails."
+            )
+
         }
     }
     
     
     var message: String {
         switch self {
-        case .importFailedWithError(let error):
+        case .importFailedWithError(let error), .deleteAllDataFailed(let error), .addPerformanceFailed(let error):
             return error.localizedDescription
             
         case .importFailedWithMessage(let message), .importCompleted(let message):
@@ -96,7 +113,8 @@ extension AlertFactory.Kind {
     @ViewBuilder
     func actions() -> some View {
         switch self {
-        case .importFailedWithError, .importFailedWithMessage, .importCompleted:
+        case .importFailedWithError, .importFailedWithMessage, .importCompleted, .deleteAllDataFailed,
+                .addPerformanceFailed:
             Button("OK") { }
             
         case .confirmDeleteAllData(let commit):
