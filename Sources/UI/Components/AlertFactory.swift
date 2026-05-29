@@ -62,31 +62,31 @@ extension AlertFactory.Kind {
         case .importFailedWithError, .importFailedWithMessage:
             return String(
                 localized: "Import Failed",
-                comment: "Title of an alert that shows when an import operation fails."
+                comment: "Alert title shown when an import operation fails."
             )
             
         case .importCompleted:
             return String(
                 localized: "Import Complete",
-                comment: "Title for an alert that appears when a CSV import is complete."
+                comment: "Alert title shown when a CSV import completes successfully."
             )
             
         case .confirmDeleteAllData:
             return String(
                 localized: "Delete All Data?",
-                comment: "Confirmation alert title that asks the user if they want to delete all their data."
+                comment: "Confirmation alert title asking the user to confirm deletion of all app data."
             )
             
         case .deleteAllDataFailed:
             return String(
                 localized: "Deleting all data failed",
-                comment: "Title for an alert that appears when an attempt to delete all app data fails."
+                comment: "Alert title shown when an attempt to delete all app data fails."
             )
             
         case .addPerformanceFailed:
             return String(
                 localized: "Failed to add performance",
-                comment: "Title for an alert that appears when an attempt to add a performance fails."
+                comment: "Alert title shown when an attempt to add a performance fails."
             )
 
         }
@@ -104,7 +104,7 @@ extension AlertFactory.Kind {
         case .confirmDeleteAllData:
             return String(
                 localized: "This action cannot be undone.",
-                comment: "Message shown in an alert when the user attempts to delete all app data."
+                comment: "Alert message explaining that deletion cannot be undone."
             )
         }
     }

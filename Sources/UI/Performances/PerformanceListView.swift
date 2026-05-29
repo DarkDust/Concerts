@@ -44,22 +44,28 @@ extension PerformanceListView {
         var body: some View {
             Table(performances) {
                 TableColumn(
-                    LocalizedStringResource("Band", comment: "Table column title: Band name")
+                    LocalizedStringResource("Band", comment: "Table column header for band name")
                 ) {
                     Text(
-                        $0.band?.name ?? String(localized: "Unknown", comment: "Unknown band name")
+                        $0.band?.name ?? String(
+                            localized: "Unknown",
+                            comment: "Displayed when the band name is unknown"
+                        )
                     ).partialAttendance($0.partialAttendance)
                 }
                 
                 TableColumn(
-                    LocalizedStringResource("Venue", comment: "Table column title: Venue name")
+                    LocalizedStringResource("Venue", comment: "Table column header for venue name")
                 ) {
-                    Text($0.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
-                        .partialAttendance($0.partialAttendance)
+                    Text($0.venue?.name ?? String(
+                        localized: "Unknown",
+                        comment: "Displayed when the venue name is unknown"
+                    ))
+                    .partialAttendance($0.partialAttendance)
                 }
                 
                 TableColumn(
-                    LocalizedStringResource("Date", comment: "Table column title: Performance date")
+                    LocalizedStringResource("Date", comment: "Table column header for performance date")
                 ) {
                     Text($0.date, format: .dateTime.year().month().day())
                         .partialAttendance($0.partialAttendance)
@@ -185,15 +191,21 @@ extension PerformanceListView {
                     (performance) in
                     
                     VStack(alignment: .leading, spacing: 4) {
-                        Text(performance.band?.name ?? String(localized: "Unknown", comment: "Unknown band name"))
-                            .font(.headline)
-                            .partialAttendance(performance.partialAttendance)
+                        Text(performance.band?.name ?? String(
+                            localized: "Unknown",
+                            comment: "Displayed when the band name is unknown"
+                        ))
+                        .font(.headline)
+                        .partialAttendance(performance.partialAttendance)
                         
                         HStack {
-                            Text(performance.venue?.name ?? String(localized: "Unknown", comment: "Unknown venue name"))
-                                .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .partialAttendance(performance.partialAttendance)
+                            Text(performance.venue?.name ?? String(
+                                localized: "Unknown",
+                                comment: "Displayed when the venue name is unknown"
+                            ))
+                            .font(.subheadline)
+                            .foregroundStyle(.secondary)
+                            .partialAttendance(performance.partialAttendance)
                             
                             Spacer()
                             

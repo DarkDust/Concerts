@@ -38,18 +38,18 @@ struct SettingsView: View {
         Form {
 #if os(macOS)
             Section(
-                LocalizedStringResource("CSV Import", comment: "Settings section about importing CSV files")
+                LocalizedStringResource("CSV Import", comment: "Section header for importing CSV files in settings")
             ) {
                 Toggle(
                     LocalizedStringResource(
                         "Ignore first line",
-                        comment: "Checkbox to skip the header row in CSV files"
+                        comment: "Toggle to skip the header row in imported CSV files"
                     ),
                     isOn: $ignoreFirstLineInCSV
                 )
                 .toggleStyle(.checkbox)
                 
-                Button(LocalizedStringResource("Import CSV file…", comment: "Button to start the CSV import")) {
+                Button(LocalizedStringResource("Import CSV file…", comment: "Button to import a CSV file")) {
                     showingImporter = true
                 }.fileImporter(
                     isPresented: $showingImporter,
@@ -73,9 +73,12 @@ struct SettingsView: View {
 #endif
             
             Section(
-                LocalizedStringResource("Data Management", comment: "Settings section about managing the app's data")
+                LocalizedStringResource(
+                    "Data Management",
+                    comment: "Section header for data management actions in settings"
+                )
             ) {
-                Button(LocalizedStringResource("Delete all data…", comment: "Button to delete all app data")) {
+                Button(LocalizedStringResource("Delete all data…", comment: "Button to delete all application data")) {
                     self.alert = .confirmDeleteAllData(commit: {
                         deleteEverything()
                     })
@@ -111,7 +114,10 @@ extension SettingsView {
     func importCSV(at url: URL) {
         do {
             guard url.startAccessingSecurityScopedResource() else {
-                alert = .importFailedWithMessage(message: String(localized: "Failed to access the file."))
+                alert = .importFailedWithMessage(message: String(
+                    localized: "Failed to access the file.",
+                    comment: "Error message shown when the app cannot access the selected file during import."
+                ))
                 return
             }
             defer { url.stopAccessingSecurityScopedResource() }
@@ -124,7 +130,10 @@ extension SettingsView {
             }
             
             guard !lines.isEmpty else {
-                alert = .importFailedWithMessage(message: String(localized: "Empty CSV file."))
+                alert = .importFailedWithMessage(message: String(
+                    localized: "Empty CSV file.",
+                    comment: "Error shown when the imported CSV file has no content."
+                ))
                 return
             }
             

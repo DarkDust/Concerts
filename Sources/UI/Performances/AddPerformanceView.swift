@@ -66,7 +66,7 @@ struct AddPerformanceView: View {
                     DatePicker(
                         LocalizedStringResource(
                             "Date",
-                            comment: "Title for the date picker when adding a new performance"
+                            comment: "Label for the date picker when adding a new performance"
                         ),
                         selection: $date,
                         displayedComponents: [.date]
@@ -79,8 +79,8 @@ struct AddPerformanceView: View {
                     
                     Toggle(
                         LocalizedStringResource(
-                            "Partial Attendance",
-                            comment: "Checkbox to mark a performance as not fully attended"
+                            "Partial attendance",
+                            comment: "Label for marking the performance as only partially attended"
                         ),
                         isOn: $partialAttendance
                     )
@@ -91,7 +91,7 @@ struct AddPerformanceView: View {
             .navigationTitle(
                 LocalizedStringResource(
                     "Add Performance",
-                    comment: "Title of the view for adding a performance"
+                    comment: "Navigation title for the view to add a new performance"
                 )
             )
 #endif
@@ -100,7 +100,7 @@ struct AddPerformanceView: View {
                     Button(
                         LocalizedStringResource(
                             "Cancel",
-                            comment: "Label for cancelling adding a performance"
+                            comment: "Button label to cancel adding a performance"
                         )
                     ) {
                         dismiss()
@@ -111,7 +111,7 @@ struct AddPerformanceView: View {
                     Button(
                         LocalizedStringResource(
                             "Add Performance",
-                            comment: "Button to add a performance"
+                            comment: "Button label to add a performance"
                         )
                     ) {
                         addPerformance()
@@ -158,7 +158,7 @@ extension AddPerformanceView {
         AutoSuggestTextField<Band>(
             String(
                 localized: "Band",
-                comment: "Name of the band for which to add a performance"
+                comment: "Label for the text field to enter the band name when adding a performance"
             ),
             text: $bandName,
             suggestions: {
@@ -190,7 +190,7 @@ extension AddPerformanceView {
         AutoSuggestTextField<Venue>(
             String(
                 localized: "Venue",
-                comment: "Name of the venue or event for which to add a performance"
+                comment: "Label for the text field to enter the venue or event name when adding a performance"
             ),
             text: $venueName,
             suggestions: {
