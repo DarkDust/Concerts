@@ -17,6 +17,9 @@ extension PerformanceListView {
     struct ContentMacOS: View {
         let performances: [Performance]
         
+        @Binding
+        var searchText: String
+        
         @State private
         var selection: Performance.ID?
         
@@ -28,6 +31,15 @@ extension PerformanceListView {
         
         @State private
         var alert: AlertFactory.Kind?
+        
+        private
+        var searchFocused: Binding<Bool> {
+            Binding {
+                uiState.requestSearchFocus
+            } set: {
+                uiState.requestSearchFocus = $0
+            }
+        }
         
         
         var body: some View {
@@ -64,6 +76,13 @@ extension PerformanceListView {
             .background(TableScroller(performances: performances))
             .alert(kind: $alert)
             .toolbar {
+                ToolbarItem {
+                    SearchField(searchText: $searchText, focus: searchFocused)
+                        .frame(width: 200)
+                }
+                
+                ToolbarSpacer(.fixed)
+                
                 ToolbarItem {
                     Button(action: addItem) {
                         Label(

@@ -22,16 +22,35 @@ struct ConcertsApp: App {
         .modelContainer(SharedModelContainer.instance)
         .environment(Repositories(context: SharedModelContainer.instance.mainContext))
         .environment(uiState)
+        #if os(macOS)
         .commands {
             CommandGroup(replacing: .newItem) {
-                Button(
-                    LocalizedStringResource("Add Performance", comment: "Menu entry to add a new performance)")
-                ) {
+                Button {
                     uiState.presentedSheet = .addPerformance
+                } label: {
+                    Label(
+                        LocalizedStringResource("Add Performance", comment: "Menu entry to add a new performance)"),
+                        systemImage: "plus"
+                    )
                 }
                 .keyboardShortcut("n")
             }
+            
+            CommandGroup(after: .pasteboard) {
+                Divider()
+                
+                Button {
+                    uiState.requestSearchFocus = true
+                } label: {
+                    Label(
+                        LocalizedStringResource("Find", comment: "A menu item that searches for a performance."),
+                        systemImage: "magnifyingglass"
+                    )
+                }
+                .keyboardShortcut("f", modifiers: .command)
+            }
         }
+        #endif
         
         #if os(macOS)
         Settings {

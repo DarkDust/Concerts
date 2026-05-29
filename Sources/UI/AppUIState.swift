@@ -24,4 +24,7 @@ class AppUIState {
     /// Currently visible sheet.
     var presentedSheet: Sheet?
     
+    /// Whether the search bar should be focused.
+    var requestSearchFocus: Bool = false
+    
 }

@@ -21,12 +21,27 @@ struct PerformanceListView: View {
     )
     private var performances: [Performance]
     
+    @State private
+    var searchText: String = ""
+    
+    private
+    var filteredPerformances: [Performance] {
+        if searchText.isEmpty {
+            return performances
+        }
+        
+        return performances.filter {
+            $0.band?.name.localizedStandardContains(searchText) == true
+            || $0.venue?.name.localizedStandardContains(searchText) == true
+        }
+    }
+    
     
     var body: some View {
 #if os(iOS)
-        ContentiOS(performances: performances)
+        ContentiOS(performances: filteredPerformances)
 #else
-        ContentMacOS(performances: performances)
+        ContentMacOS(performances: filteredPerformances, searchText: $searchText)
 #endif
     }
     
