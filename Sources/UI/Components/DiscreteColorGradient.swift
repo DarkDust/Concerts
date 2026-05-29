@@ -19,10 +19,10 @@ struct DiscreteColorGradient {
     
     /// Interpolate between two colors and derive a given number of colors on that gradient.
     ///
-    /// - parameter startColor Color at the start of the gradient.
-    /// - parameter endColor Color at the end of the gradient.
-    /// - parameter steps Number of colors to derive.
-    /// - parameter colorScheme Current color scheme to take into account when resolving colors.
+    /// - parameter startColor: Color at the start of the gradient.
+    /// - parameter endColor: Color at the end of the gradient.
+    /// - parameter steps: Number of colors to derive.
+    /// - parameter colorScheme: Current color scheme to take into account when resolving colors.
     static func colors(from startColor: Color, to endColor: Color, steps: Int, colorScheme: ColorScheme) -> [Color] {
         // It's inconvenient to work with long identifier names here…
         // swiftlint:disable identifier_name

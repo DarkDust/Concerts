@@ -122,10 +122,10 @@ struct DataTests {
         
         // Create visits, one after another
         let date = Date.now
-        let visit1 = try repositories.performances.add(band: band1, venue: venue, date: date)
+        let visit1 = try repositories.performances.add(band: band1, venue: venue, date: date, partialAttendance: false)
         #expect(visit1.sequence == 1)
         
-        let visit2 = try repositories.performances.add(band: band2, venue: venue, date: date)
+        let visit2 = try repositories.performances.add(band: band2, venue: venue, date: date, partialAttendance: false)
         #expect(visit2.sequence == 2)
 
         // Fetch visits back
