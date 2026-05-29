@@ -39,7 +39,7 @@ struct PerformanceListView: View {
     
     var body: some View {
 #if os(iOS)
-        ContentiOS(performances: filteredPerformances)
+        ContentiOS(performances: filteredPerformances, searchText: $searchText)
 #else
         ContentMacOS(performances: filteredPerformances, searchText: $searchText)
 #endif

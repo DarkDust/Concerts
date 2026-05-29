@@ -6,8 +6,14 @@
 //
 
 
-#if os(macOS)
 import SwiftUI
+
+// TODO: Resolve semantic difference of the `focus` binding.
+// On macOS, the binding is set on the outside and the view becomes the first responder. It immediately resets the
+// `focus` binding to false.
+// On iOS, it truly reflects the first responder state. Setting it to false resigns the first responder, for example.
+
+#if canImport(AppKit)
 import AppKit
 
 
@@ -68,4 +74,85 @@ struct SearchField: NSViewRepresentable {
     
 }
 
+#elseif canImport(UIKit)
+import UIKit
+
+struct SearchField: UIViewRepresentable {
+    
+    /// The text to search.
+    @Binding
+    var searchText: String
+    
+    /// Binding that should be set to true when the search field should gain keyboard focus.
+    @Binding
+    var focus: Bool
+    
+    
+    class Coordinator: NSObject, UISearchBarDelegate, UITextFieldDelegate {
+        private
+        var parent: SearchField
+        
+        init(_ parent: SearchField) {
+            self.parent = parent
+        }
+        
+        func searchBar(
+            _ searchBar: UISearchBar,
+            textDidChange searchText: String
+        ) {
+            parent.searchText = searchText
+        }
+        
+        func searchBarTextDidBeginEditing(_ searchBar: UISearchBar) {
+            if !parent.focus {
+                parent.focus = true
+            }
+        }
+        
+        func searchBarTextDidEndEditing(_ searchBar: UISearchBar) {
+            if parent.focus {
+                parent.focus = false
+            }
+        }
+        
+        func textFieldShouldClear(_ textField: UITextField) -> Bool {
+            // Triggered when the "clear" (x) button is pressed.
+            DispatchQueue.main.async {
+                self.parent.focus = false
+            }
+            return true
+        }
+        
+        func searchBarSearchButtonClicked(_ searchBar: UISearchBar) {
+            parent.focus = false
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    func makeUIView(context: Context) -> UISearchBar {
+        let searchBar = UISearchBar()
+        searchBar.delegate = context.coordinator
+        searchBar.searchTextField.delegate = context.coordinator
+        searchBar.searchBarStyle = .minimal
+        return searchBar
+    }
+    
+    func updateUIView(_ uiView: UISearchBar, context: Context) {
+        uiView.text = searchText
+        
+        if focus {
+            if !uiView.isFirstResponder {
+                uiView.becomeFirstResponder()
+            }
+        } else {
+            if uiView.isFirstResponder {
+                uiView.resignFirstResponder()
+            }
+        }
+    }
+    
+}
 #endif
