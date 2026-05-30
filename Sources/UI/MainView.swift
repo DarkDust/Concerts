@@ -28,6 +28,14 @@ struct MainView: View {
                     )
                 }
             
+            DirectoryView()
+                .tabItem {
+                    Label(
+                        LocalizedStringResource("Directory", comment: "Tab view title: view bands and venues"),
+                        systemImage: "music.note.house"
+                    )
+                }
+            
             StatisticsView()
                 .tabItem {
                     Label(
