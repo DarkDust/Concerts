@@ -88,16 +88,29 @@ extension PerformanceListView {
                 ToolbarSpacer(.fixed)
                 
                 ToolbarItem {
+                    Button(action: editItem) {
+                        Label(
+                            LocalizedStringResource(
+                                "Edit Performance",
+                                comment: "Toolbar button title: edit a selected performance"
+                            ),
+                            systemImage: "square.and.pencil"
+                        )
+                    }
+                    .accessibilityIdentifier("edit-item")
+                    .disabled(selection == nil)
+                }
+                ToolbarItem {
                     Button(action: addItem) {
                         Label(
                             LocalizedStringResource(
                                 "Add Performance",
-                                comment: "Toolbar button title: add a performance"
+                                comment: "Toolbar button title: add a new performance"
                             ),
                             systemImage: "plus"
                         )
-                        .accessibilityIdentifier("add-item")
                     }
+                    .accessibilityIdentifier("add-item")
                 }
             }
             .onDeleteCommand {
@@ -125,6 +138,12 @@ extension PerformanceListView.ContentMacOS {
     
     func addItem() {
         uiState.presentedSheet = .addPerformance
+    }
+    
+    func editItem() {
+        if let selection, let performance = performances.first(where: { $0.id == selection }) {
+            uiState.presentedSheet = .editPerformance(performance)
+        }
     }
     
 }

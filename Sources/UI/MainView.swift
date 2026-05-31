@@ -60,7 +60,12 @@ struct MainView: View {
             
             switch sheet {
             case .addPerformance:
-                AddPerformanceView()
+                AddOrEditPerformanceView(existing: nil)
+                    .frame(minWidth: 400, minHeight: 100)
+                    .presentationDetents([.medium])
+                
+            case .editPerformance(let performance):
+                AddOrEditPerformanceView(existing: performance)
                     .frame(minWidth: 400, minHeight: 100)
                     .presentationDetents([.medium])
             }

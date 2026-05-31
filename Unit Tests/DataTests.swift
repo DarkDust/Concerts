@@ -169,4 +169,6 @@ struct DataTests {
         #expect(venue3.id != venue1.id)
     }
     
+    
+    // TODO: Add test for editing a performance, confirm band/venue vanishes
 }

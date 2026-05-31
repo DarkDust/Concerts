@@ -1,5 +1,5 @@
 //
-//  AddPerformanceView.swift
+//  AddOrEditPerformanceView.swift
 //  Concerts
 //
 //  Created by Marc Haisenko on 2026-05-27.
@@ -11,12 +11,15 @@ import SwiftUI
 
 
 /// Main view to add a performance.
-struct AddPerformanceView: View {
+struct AddOrEditPerformanceView: View {
     
-    /// Known fields.
+    /// Known fields for keyboard focus.
     enum Field {
         case bandName
     }
+    
+    /// When set, the existing performance to edit.
+    let existing: Performance?
     
     /// Sheet dismissal.
     @Environment(\.dismiss) private
@@ -72,6 +75,9 @@ struct AddPerformanceView: View {
                         displayedComponents: [.date]
                     )
                     .datePickerStyle(.compact)
+                    // No support for editing the date so far. I would also need to add support for changing the
+                    // performance's sequence for that.
+                    .disabled(existing != nil)
                     
                     bandNameField
                     
@@ -89,7 +95,12 @@ struct AddPerformanceView: View {
             .padding()
 #if os(macOS)
             .navigationTitle(
-                LocalizedStringResource(
+                existing != nil
+                ? LocalizedStringResource(
+                    "Edit Performance",
+                    comment: "Navigation title for the view to edit an existing performance"
+                )
+                : LocalizedStringResource(
                     "Add Performance",
                     comment: "Navigation title for the view to add a new performance"
                 )
@@ -109,12 +120,21 @@ struct AddPerformanceView: View {
                 
                 ToolbarItem(placement: .confirmationAction) {
                     Button(
-                        LocalizedStringResource(
+                        existing != nil
+                        ? LocalizedStringResource(
+                            "Edit Performance",
+                            comment: "Button label to edit a performance"
+                        )
+                        : LocalizedStringResource(
                             "Add Performance",
                             comment: "Button label to add a performance"
                         )
                     ) {
-                        addPerformance()
+                        if let existing {
+                            editPerformance(existing)
+                        } else {
+                            addPerformance()
+                        }
                     }
                     .accessibilityIdentifier("add-performance")
                     .disabled(
@@ -125,6 +145,12 @@ struct AddPerformanceView: View {
             }
             .alert(kind: $alert)
             .onAppear {
+                if let existing {
+                    bandName = existing.band?.name ?? ""
+                    venueName = existing.venue?.name ?? ""
+                    date = existing.date
+                }
+                
                 focusedField = .bandName
             }
         }
@@ -134,7 +160,7 @@ struct AddPerformanceView: View {
 
 
 private
-extension AddPerformanceView {
+extension AddOrEditPerformanceView {
     
     func addPerformance() {
         do {
@@ -149,6 +175,44 @@ extension AddPerformanceView {
             dismiss()
         } catch {
             alert = .addPerformanceFailed(error)
+        }
+    }
+    
+    func editPerformance(_ performance: Performance) {
+        do {
+            var didChange = performance.partialAttendance != partialAttendance
+            guard
+                var band = performance.band,
+                var venue = performance.venue
+            else {
+                assertionFailure("Performance is missing band or venue")
+                return
+            }
+            
+            if bandName != band.name {
+                band = try repositories.bands.create(name: bandName)
+                didChange = true
+            }
+            if venueName != venue.name {
+                venue = try repositories.venues.create(name: venueName)
+                didChange = true
+            }
+            
+            guard didChange else {
+                dismiss()
+                return
+            }
+            
+            try repositories.edit(
+                performance: performance,
+                band: band,
+                venue: venue,
+                partialAttendence: partialAttendance
+            )
+            dismiss()
+            
+        } catch {
+            alert = .editPerformanceFailed(error)
         }
     }
     
@@ -219,6 +283,6 @@ extension AddPerformanceView {
 
 
 #Preview {
-    AddPerformanceView()
+    AddOrEditPerformanceView(existing: nil)
         .modelContainer(ModelContainer.mock())
 }

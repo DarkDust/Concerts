@@ -31,6 +31,9 @@ struct AlertFactory {
         /// Adding a performance failed.
         case addPerformanceFailed(any Error)
         
+        /// Editing an existing performance failed.
+        case editPerformanceFailed(any Error)
+        
         /// Confirm deletion of all data.
         case confirmDeleteAllData(commit: @MainActor () -> Void)
         
@@ -71,6 +74,12 @@ extension AlertFactory.Kind {
             return String(
                 localized: "Failed to add performance",
                 comment: "Alert title shown when an attempt to add a performance fails."
+            )
+            
+        case .editPerformanceFailed:
+            return String(
+                localized: "Failed to edit performance",
+                comment: "Alert title shown when an attempt to edit an existing performance fails."
             )
             
         case .confirmDeleteAllData:
@@ -114,7 +123,8 @@ extension AlertFactory.Kind {
                 comment: "Alert message explaining that deletion cannot be undone."
             )
             
-        case .addPerformanceFailed(let error), .deleteAllDataFailed(let error), .deletePerformanceFailed(let error),
+        case .addPerformanceFailed(let error), .editPerformanceFailed(let error),
+                .deleteAllDataFailed(let error), .deletePerformanceFailed(let error),
                 .importFailedWithError(let error):
             return error.localizedDescription
             
@@ -128,8 +138,8 @@ extension AlertFactory.Kind {
     @ViewBuilder
     func actions() -> some View {
         switch self {
-        case .addPerformanceFailed, .deleteAllDataFailed, .deletePerformanceFailed, .importCompleted,
-                .importFailedWithError, .importFailedWithMessage:
+        case .addPerformanceFailed, .editPerformanceFailed, .deleteAllDataFailed, .deletePerformanceFailed,
+                .importCompleted, .importFailedWithError, .importFailedWithMessage:
             Button("OK") { }
             
         case .confirmDeleteAllData(let commit):

@@ -23,6 +23,7 @@ final class PerformanceRepository {
     
     
     /// Add a performance.
+    @discardableResult
     func add(band: Band, venue: Venue, date: Date, partialAttendance: Bool) throws(RepositoryError) -> Performance {
         do {
             let normalizedDate = Performance.normalizedConcertDate(date)
@@ -43,6 +44,18 @@ final class PerformanceRepository {
         } catch {
             throw RepositoryError.unknown(error)
         }
+    }
+    
+    /// Edit an existing performance
+    ///
+    /// - note: Don't call this directly. Use ``Repositories/edit(performance:band:venue:)`` instead.
+    @discardableResult
+    func edit(performance: Performance, band: Band, venue: Venue, partialAttendence: Bool) throws -> Performance {
+        performance.band = band
+        performance.venue = venue
+        performance.partialAttendance = partialAttendence
+        try context.save()
+        return performance
     }
     
     

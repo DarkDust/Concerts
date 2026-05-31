@@ -67,6 +67,9 @@ extension PerformanceListView {
         @Environment(Repositories.self) private
         var repositories: Repositories
         
+        @Environment(AppUIState.self) private
+        var uiState: AppUIState
+        
         @Environment(\.colorScheme) private
         var colorScheme: ColorScheme
         
@@ -117,7 +120,12 @@ extension PerformanceListView {
                                 delete(performance)
                             } label: {
                                 Label("Delete", systemImage: "trash")
-                                // Button label to delete the performance
+                            }
+                            
+                            Button {
+                                edit(performance)
+                            } label: {
+                                Label("Edit", systemImage: "square.and.pencil")
                             }
                         }
                     }
@@ -149,23 +157,31 @@ extension PerformanceListView {
             }
         }
         
+    }
+    
+}
+
+
+private
+extension PerformanceListView.ListView {
         
-        private
-        func delete(_ performance: Performance) {
-            do {
-                try repositories.delete(performance)
-            } catch {
-                alert = .deletePerformanceFailed(error)
-            }
+    func delete(_ performance: Performance) {
+        do {
+            try repositories.delete(performance)
+        } catch {
+            alert = .deletePerformanceFailed(error)
         }
-        
-        private
-        func scrollToBottom(proxy: ScrollViewProxy) {
-            if let last = performances.last {
-                // Scroll to bottom. The anchor point is "lower" than .bottom to absolutely scroll to the
-                // bottom. With .bottom, there are a few pixels left to scroll.
-                proxy.scrollTo(last, anchor: UnitPoint(x: 0.5, y: 1.5))
-            }
+    }
+    
+    func edit(_ performance: Performance) {
+        uiState.presentedSheet = .editPerformance(performance)
+    }
+    
+    func scrollToBottom(proxy: ScrollViewProxy) {
+        if let last = performances.last {
+            // Scroll to bottom. The anchor point is "lower" than .bottom to absolutely scroll to the
+            // bottom. With .bottom, there are a few pixels left to scroll.
+            proxy.scrollTo(last, anchor: UnitPoint(x: 0.5, y: 1.5))
         }
     }
     

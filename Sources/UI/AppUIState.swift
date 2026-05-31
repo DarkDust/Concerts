@@ -15,11 +15,22 @@ class AppUIState {
     
     /// Sheets used throughout the app.
     enum Sheet: Identifiable {
-        /// The ``AddPerformanceView`` sheet.
+        /// The ``AddOrEditPerformanceView`` sheet, to add a new performance.
         case addPerformance
         
-        var id: Self { self }
+        /// The ``AddOrEditPerformanceView`` sheet, to edit an existing.
+        case editPerformance(Performance)
+        
+        var id: String {
+            switch self {
+            case .addPerformance:
+                return "addPerformance"
+            case .editPerformance(let performance):
+                return "editPerformance-\(performance.id)"
+            }
+        }
     }
+    
     
     /// Currently visible sheet.
     var presentedSheet: Sheet?

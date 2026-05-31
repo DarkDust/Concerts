@@ -58,7 +58,9 @@ class ConcertsUITests: XCTestCase {
         XCTAssertTrue(app.staticTexts["Some Band"].waitForExistence(timeout: 2))
         XCTAssertTrue(app.staticTexts["Awesome Venue"].waitForExistence(timeout: 2))
     }
-
+    
+    
+    // TODO: Test edit performance
 }
 
 

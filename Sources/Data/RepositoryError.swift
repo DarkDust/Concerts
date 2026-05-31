@@ -8,6 +8,8 @@
 import Foundation
 internal import CoreData
 
+// TODO: Remove this error, it's useless.
+
 /// Errors during repository operations.
 enum RepositoryError: Error {
     
