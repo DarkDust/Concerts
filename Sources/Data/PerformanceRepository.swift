@@ -24,26 +24,21 @@ final class PerformanceRepository {
     
     /// Add a performance.
     @discardableResult
-    func add(band: Band, venue: Venue, date: Date, partialAttendance: Bool) throws(RepositoryError) -> Performance {
-        do {
-            let normalizedDate = Performance.normalizedConcertDate(date)
-            let nextSequence = try Performance.nextSequence(for: normalizedDate, in: context)
-            
-            let performance = Performance(
-                date: normalizedDate,
-                sequence: nextSequence,
-                partialAttendance: partialAttendance,
-                band: band,
-                venue: venue
-            )
-            
-            context.insert(performance)
-            try context.save()
-            return performance
-            
-        } catch {
-            throw RepositoryError.unknown(error)
-        }
+    func add(band: Band, venue: Venue, date: Date, partialAttendance: Bool) throws -> Performance {
+        let normalizedDate = Performance.normalizedConcertDate(date)
+        let nextSequence = try Performance.nextSequence(for: normalizedDate, in: context)
+        
+        let performance = Performance(
+            date: normalizedDate,
+            sequence: nextSequence,
+            partialAttendance: partialAttendance,
+            band: band,
+            venue: venue
+        )
+        
+        context.insert(performance)
+        try context.save()
+        return performance
     }
     
     /// Edit an existing performance

@@ -24,7 +24,7 @@ final class BandRepository {
     
     
     /// Create a new band.
-    func create(name: String) throws(RepositoryError) -> Band {
+    func create(name: String) throws -> Band {
         let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let orderedSame = ComparisonResult.orderedSame
         let descriptor = FetchDescriptor<Band>(
@@ -32,24 +32,17 @@ final class BandRepository {
                 normalizedName.caseInsensitiveCompare($0.name) == orderedSame
             }
         )
-
-        do {
-            let existing = try context.fetch(descriptor)
-            if let band = existing.first {
-                assert(existing.count == 1)
-                return band
-            }
-
-            let band = Band(name: normalizedName)
-            context.insert(band)
-            try context.save()
+        
+        let existing = try context.fetch(descriptor)
+        if let band = existing.first {
+            assert(existing.count == 1)
             return band
-            
-        } catch let error as RepositoryError {
-            throw error
-        } catch {
-            throw RepositoryError.unknown(error)
         }
+
+        let band = Band(name: normalizedName)
+        context.insert(band)
+        try context.save()
+        return band
     }
     
     /// Query all bands.

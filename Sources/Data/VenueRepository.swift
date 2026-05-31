@@ -23,7 +23,7 @@ final class VenueRepository {
     
     
     /// Create a new venue.
-    func create(name: String, city: String? = nil) throws(RepositoryError) -> Venue {
+    func create(name: String, city: String? = nil) throws -> Venue {
         let normalizedName = name.trimmingCharacters(in: .whitespacesAndNewlines)
         let orderedSame = ComparisonResult.orderedSame
         let descriptor = FetchDescriptor<Venue>(
@@ -31,24 +31,17 @@ final class VenueRepository {
                 normalizedName.caseInsensitiveCompare($0.name) == orderedSame
             }
         )
-
-        do {
-            let existing = try context.fetch(descriptor)
-            if let venue = existing.first {
-                assert(existing.count == 1)
-                return venue
-            }
-
-            let venue = Venue(name: normalizedName)
-            context.insert(venue)
-            try context.save()
+        
+        let existing = try context.fetch(descriptor)
+        if let venue = existing.first {
+            assert(existing.count == 1)
             return venue
-            
-        } catch let error as RepositoryError {
-            throw error
-        } catch {
-            throw RepositoryError.unknown(error)
         }
+
+        let venue = Venue(name: normalizedName)
+        context.insert(venue)
+        try context.save()
+        return venue
     }
     
     
