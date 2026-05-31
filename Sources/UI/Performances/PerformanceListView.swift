@@ -52,5 +52,6 @@ struct PerformanceListView: View {
     let container = ModelContainer.mock(scenario: .basic)
     PerformanceListView()
         .modelContainer(container)
+        .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())
 }

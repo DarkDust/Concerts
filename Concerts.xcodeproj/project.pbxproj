@@ -54,6 +54,8 @@
 				Data/RepositoryError.swift,
 				Data/Venue.swift,
 				Data/VenueRepository.swift,
+				UI/Components/ConditionalViewModifier.swift,
+				UI/Directory/DirectoryDetailView.swift,
 			);
 			target = 49FAF88D2FC628FE00C5239D /* UITests */;
 		};
@@ -71,6 +73,8 @@
 				Data/RepositoryError.swift,
 				Data/Venue.swift,
 				Data/VenueRepository.swift,
+				UI/Components/ConditionalViewModifier.swift,
+				UI/Directory/DirectoryDetailView.swift,
 			);
 			target = 49FAF8832FC628FE00C5239D /* UnitTests */;
 		};

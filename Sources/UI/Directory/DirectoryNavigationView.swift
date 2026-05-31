@@ -39,6 +39,9 @@ struct DirectoryNavigationView: View {
     /// All known venues.
     let venues: [Venue]
     
+    @Environment(\.horizontalSizeClass) private
+    var horizontalSizeClass
+    
     
     var body: some View {
         ScrollViewReader {
@@ -62,6 +65,10 @@ struct DirectoryNavigationView: View {
                             .tag(DirectoryView.Selection.venue(venue.id))
                     }
                 }
+            }
+            .conditional(horizontalSizeClass == .compact) {
+                // See large comment in DirectoryView.swift, narrowLayout.
+                $0.listStyle(.plain)
             }
             .onAppear {
                 if mode == .combined {

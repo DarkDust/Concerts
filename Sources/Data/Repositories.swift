@@ -42,6 +42,12 @@ extension Repositories {
         
         /// Database with a few entries.
         case basic
+        
+        /// Database with multiple performances by a single band.
+        case bandPerformances
+        
+        /// Database with multiple performances at a single venue.
+        case venuePerformances
     }
     
     
@@ -78,6 +84,37 @@ extension Repositories {
             let band7 = try! repositories.bands.create(name: "MONO")
             _ = try! repositories.performances.add(band: band6, venue: venue2, date: date3, partialAttendance: true)
             _ = try! repositories.performances.add(band: band7, venue: venue2, date: date3, partialAttendance: false)
+            
+        case .bandPerformances:
+            let band = try! repositories.bands.create(name: "Ash Code")
+            
+            let venue1 = try! repositories.venues.create(name: "Katzenclub")
+            let date1 = DateComponents(calendar: .current, year: 2018, month: 3, day: 17).date!
+            
+            let venue2 = try! repositories.venues.create(name: "WGT (Stadtbad)")
+            let date2 = DateComponents(calendar: .current, year: 2018, month: 5, day: 18).date!
+            
+            let venue3 = try! repositories.venues.create(name: "Katzenclub Festival")
+            let date3 = DateComponents(calendar: .current, year: 2023, month: 11, day: 4).date!
+            
+            _ = try! repositories.performances.add(band: band, venue: venue1, date: date1, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band, venue: venue2, date: date2, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band, venue: venue3, date: date3, partialAttendance: false)
+            
+        case .venuePerformances:
+            let venue = try! repositories.venues.create(name: "Olympiahalle")
+            
+            let band1 = try! repositories.bands.create(name: "The Cure")
+            let date1 = DateComponents(calendar: .current, year: 2016, month: 10, day: 24).date!
+            
+            let band2 = try! repositories.bands.create(name: "The Murder Capital")
+            let date2 = DateComponents(calendar: .current, year: 2024, month: 10, day: 18).date!
+            
+            let band3 = try! repositories.bands.create(name: "Nick Cave & the Bad Seeds")
+            
+            _ = try! repositories.performances.add(band: band1, venue: venue, date: date1, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band2, venue: venue, date: date2, partialAttendance: false)
+            _ = try! repositories.performances.add(band: band3, venue: venue, date: date2, partialAttendance: false)
         }
         
         return repositories

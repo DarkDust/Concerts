@@ -110,6 +110,22 @@ struct DirectoryView: View {
 #if os(iOS)
     @ViewBuilder private
     var narrowLayout: some View {
+        // A large amount of testing and cursing went into getting rid of ugly jumps when navigating to a detail view.
+        // Basically, we need to force showing the navigation bar in the collapsed state as well. If we don't want any
+        // title to be visible, this can do the trick:
+        //
+        // ToolbarItem(placement: .principal) {
+        //     Color.clear
+        //         .frame(width: 1, height: 1)
+        // }
+        //
+        // I've opted to show a symbol instead, it's a bit nicer.
+        //
+        // In any case, `.toolbarTitleDisplayMode(.inline)` on both navigation and detail view is required as well.
+        //
+        // But the problems don't stop here: the navigation list style must explicitly be `plain`, otherwise we get an
+        // empty space between the list content and navigation bar. Probably an empty list section header.
+        
         VStack(spacing: 0) {
             TabView(selection: $kind) {
                 NavigationSplitView {
@@ -120,10 +136,16 @@ struct DirectoryView: View {
                         bands: bands,
                         venues: venues
                     )
-                    
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Image(systemName: "music.microphone")
+                        }
+                    }
+                    .toolbarTitleDisplayMode(.inline)
+
                 } detail: {
                     if let band = selectedBand {
-                        Text("Detail: \(band.name)")
+                        DirectoryDetailView(value: .band(band))
                     } else {
                         Text("Nothing selected")
                     }
@@ -138,10 +160,16 @@ struct DirectoryView: View {
                         bands: bands,
                         venues: venues
                     )
-                    
+                    .toolbar {
+                        ToolbarItem(placement: .principal) {
+                            Image(systemName: "mappin.and.ellipse")
+                        }
+                    }
+                    .toolbarTitleDisplayMode(.inline)
+
                 } detail: {
                     if let venue = selectedVenue {
-                        Text("Detail: \(venue.name)")
+                        DirectoryDetailView(value: .venue(venue))
                     } else {
                         Text("Nothing selected")
                     }
@@ -181,14 +209,14 @@ struct DirectoryView: View {
             switch kind {
             case .bands:
                 if let band = selectedBand {
-                    Text("Detail: \(band.name)")
+                    DirectoryDetailView(value: .band(band))
                 } else {
                     Text("Nothing selected")
                 }
                 
             case .venues:
                 if let venue = selectedVenue {
-                    Text("Detail: \(venue.name)")
+                    DirectoryDetailView(value: .venue(venue))
                 } else {
                     Text("Nothing selected")
                 }
