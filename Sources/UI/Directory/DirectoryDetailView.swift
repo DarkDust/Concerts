@@ -64,10 +64,12 @@ struct DirectoryDetailView: View {
                                 format: .dateTime.year().month().day()
                             )
                             .foregroundStyle(performance.date.yearColor(colorScheme: colorScheme))
+                            .partialAttendance(performance.partialAttendance, useOpacity: true)
                             .gridColumnAlignment(.trailing)
                             
                             Text(value.text(for: performance))
-                            .frame(maxWidth: .infinity, alignment: .leading)
+                                .partialAttendance(performance.partialAttendance)
+                                .frame(maxWidth: .infinity, alignment: .leading)
                         }
                     }
                 }
