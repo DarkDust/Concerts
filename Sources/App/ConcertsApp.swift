@@ -18,11 +18,16 @@ struct ConcertsApp: App {
     var body: some Scene {
         WindowGroup {
             MainView()
+#if os(macOS)
+                .frame(minWidth: 640, minHeight: 480)
+#endif
         }
         .modelContainer(SharedModelContainer.instance)
         .environment(Repositories(context: SharedModelContainer.instance.mainContext))
         .environment(uiState)
-        #if os(macOS)
+#if os(macOS)
+        .defaultSize(width: 800, height: 600)
+        .windowResizability(.contentMinSize)
         .commands {
             CommandGroup(replacing: .newItem) {
                 Button {
@@ -50,16 +55,16 @@ struct ConcertsApp: App {
                 .keyboardShortcut("f", modifiers: .command)
             }
         }
-        #endif
+#endif
         
-        #if os(macOS)
+#if os(macOS)
         Settings {
             SettingsView()
                 .navigationTitle("Settings")
                 .modelContainer(SharedModelContainer.instance)
                 .environment(Repositories(context: SharedModelContainer.instance.mainContext))
         }
-        #endif
+#endif
     }
     
 }
