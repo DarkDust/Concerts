@@ -13,11 +13,19 @@ struct PartialAttendanceModifier: ViewModifier {
     
     let partialAttendance: Bool
     
+    let useOpacity: Bool
+    
     func body(content: Content) -> some View {
         if partialAttendance {
-            content
-                .foregroundStyle(.secondary)
-                .italic()
+            if useOpacity {
+                content
+                    .opacity(0.7)
+                    .italic()
+            } else {
+                content
+                    .foregroundStyle(.secondary)
+                    .italic()
+            }
         } else {
             content
         }
@@ -30,11 +38,13 @@ extension View {
     
     /// Modify the font and foreground style when a performance was only attended partially.
     func partialAttendance(
-        _ partialAttendance: Bool
+        _ partialAttendance: Bool,
+        useOpacity: Bool = false
     ) -> some View {
         modifier(
             PartialAttendanceModifier(
-                partialAttendance: partialAttendance
+                partialAttendance: partialAttendance,
+                useOpacity: useOpacity
             )
         )
     }

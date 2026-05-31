@@ -30,6 +30,10 @@ struct DirectoryDetailView: View {
     @Environment(\.horizontalSizeClass) private
     var horizontalSizeClass
     
+    /// Current color scheme.
+    @Environment(\.colorScheme) private
+    var colorScheme
+    
     
     var body: some View {
         let performances = value.performances
@@ -59,6 +63,7 @@ struct DirectoryDetailView: View {
                                 performance.date,
                                 format: .dateTime.year().month().day()
                             )
+                            .foregroundStyle(performance.date.yearColor(colorScheme: colorScheme))
                             .gridColumnAlignment(.trailing)
                             
                             Text(value.text(for: performance))

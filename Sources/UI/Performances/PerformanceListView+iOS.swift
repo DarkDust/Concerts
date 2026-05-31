@@ -67,6 +67,9 @@ extension PerformanceListView {
         @Environment(Repositories.self) private
         var repositories: Repositories
         
+        @Environment(\.colorScheme) private
+        var colorScheme: ColorScheme
+        
         @State private
         var alert: AlertFactory.Kind?
         
@@ -104,8 +107,8 @@ extension PerformanceListView {
                                     format: .dateTime.year().month().day()
                                 )
                                 .font(.subheadline)
-                                .foregroundStyle(.secondary)
-                                .partialAttendance(performance.partialAttendance)
+                                .foregroundStyle(performance.date.yearColor(colorScheme: colorScheme))
+                                .partialAttendance(performance.partialAttendance, useOpacity: true)
                             }
                         }
                         .id(performance)

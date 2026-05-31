@@ -29,6 +29,9 @@ extension PerformanceListView {
         @Environment(AppUIState.self) private
         var uiState: AppUIState
         
+        @Environment(\.colorScheme) private
+        var colorScheme: ColorScheme
+        
         @State private
         var alert: AlertFactory.Kind?
         
@@ -69,7 +72,8 @@ extension PerformanceListView {
                     LocalizedStringResource("Date", comment: "Table column header for performance date")
                 ) {
                     Text($0.date, format: .dateTime.year().month().day())
-                        .partialAttendance($0.partialAttendance)
+                        .foregroundStyle($0.date.yearColor(colorScheme: colorScheme))
+                        .partialAttendance($0.partialAttendance, useOpacity: true)
                 }
                 .width(100)
             }

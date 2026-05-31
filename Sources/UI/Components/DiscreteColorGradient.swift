@@ -67,6 +67,34 @@ struct DiscreteColorGradient {
         // swiftlint:enable identifier_name
     }
     
+    
+    /// Derive descrete colors on a linear gradient with multiple stops.
+    ///
+    /// - parameter stops: The color stops. Should be more two or more colors.
+    /// - parameter steps: How many colors to derive between each pair of stops.
+    /// - parameter colorScheme: Current color scheme to take into account when resolving colors.
+    /// - returns: A list of `(stops.count - 1) * steps` colors.
+    static func colors(stops: [Color], steps: Int, colorScheme: ColorScheme) -> [Color] {
+        switch stops.count {
+        case 0:
+            return []
+            
+        case 1:
+            return [stops[0]]
+            
+        default:
+            break
+        }
+        
+        let pairs = (1 ..< stops.count).map {
+            (stops[$0 - 1], stops[$0])
+        }
+        
+        return pairs.flatMap {
+            Self.colors(from: $0.0, to: $0.1, steps: steps + 1, colorScheme: colorScheme).dropLast()
+        }
+    }
+    
 }
 
 #if canImport(AppKit)
