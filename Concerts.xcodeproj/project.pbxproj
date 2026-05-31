@@ -75,6 +75,7 @@
 				Data/VenueRepository.swift,
 				UI/Components/ConditionalViewModifier.swift,
 				UI/Directory/DirectoryDetailView.swift,
+				Utilities/NumberAlgorithms.swift,
 			);
 			target = 49FAF8832FC628FE00C5239D /* UnitTests */;
 		};
