@@ -40,25 +40,6 @@
 			};
 			target = 49FAF8722FC628FD00C5239D /* Concerts */;
 		};
-		49FAF8C12FC637BE00C5239D /* Exceptions for "Sources" folder in "UITests" target */ = {
-			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
-			membershipExceptions = (
-				Data/Band.swift,
-				Data/BandRepository.swift,
-				Data/ModelContainer.swift,
-				Data/Performance.swift,
-				Data/PerformanceRepository.swift,
-				Data/Repositories.swift,
-				"Data/Repositories+Delete.swift",
-				"Data/Repositories+Edit.swift",
-				"Data/Repositories+Import.swift",
-				Data/Venue.swift,
-				Data/VenueRepository.swift,
-				UI/Components/ConditionalViewModifier.swift,
-				UI/Directory/DirectoryDetailView.swift,
-			);
-			target = 49FAF88D2FC628FE00C5239D /* UITests */;
-		};
 		49FAF8D12FC645E200C5239D /* Exceptions for "Sources" folder in "UnitTests" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -73,8 +54,6 @@
 				"Data/Repositories+Import.swift",
 				Data/Venue.swift,
 				Data/VenueRepository.swift,
-				UI/Components/ConditionalViewModifier.swift,
-				UI/Directory/DirectoryDetailView.swift,
 				Utilities/NumberAlgorithms.swift,
 			);
 			target = 49FAF8832FC628FE00C5239D /* UnitTests */;
@@ -86,7 +65,6 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				49FAF8D12FC645E200C5239D /* Exceptions for "Sources" folder in "UnitTests" target */,
-				49FAF8C12FC637BE00C5239D /* Exceptions for "Sources" folder in "UITests" target */,
 			);
 			path = Sources;
 			sourceTree = "<group>";
