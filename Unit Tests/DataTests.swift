@@ -170,5 +170,35 @@ struct DataTests {
     }
     
     
-    // TODO: Add test for editing a performance, confirm band/venue vanishes
+    @Test @MainActor
+    func testEditPerformance() throws {
+        let container = ModelContainer.mock()
+        let context = ModelContext(container)
+        let repositories = Repositories(context: context)
+        
+        // Create and insert performance.
+        let band1 = try repositories.bands.create(name: "Aesthetic Perfection")
+        let venue1 = try repositories.venues.create(name: "Backstage Club")
+        let performance = try repositories.performances.add(band: band1, venue: venue1, date: .now, partialAttendance: false)
+        #expect(performance.band?.name == "Aesthetic Perfection")
+        #expect(performance.venue?.name == "Backstage Club")
+        #expect(!performance.partialAttendance)
+        
+        // Change it.
+        let band2 = try repositories.bands.create(name: "Welle: Erdball")
+        let venue2 = try repositories.venues.create(name: "WGT (AGRA)")
+        let updatedPerformance = try repositories.edit(performance: performance, band: band2, venue: venue2, partialAttendence: true)
+        #expect(updatedPerformance.id == performance.id)
+        #expect(performance.band?.name == "Welle: Erdball")
+        #expect(performance.venue?.name == "WGT (AGRA)")
+        #expect(performance.partialAttendance)
+        
+        // Check the old band and venue have vanished.
+        let bands = try repositories.bands.fetchAll()
+        let venues = try repositories.venues.fetchAll()
+        #expect(bands.count == 1)
+        #expect(bands[0].name == "Welle: Erdball")
+        #expect(venues.count == 1)
+        #expect(venues[0].name == "WGT (AGRA)")
+    }
 }

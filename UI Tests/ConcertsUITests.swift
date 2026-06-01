@@ -25,10 +25,9 @@ class ConcertsUITests: XCTestCase {
         // Put teardown code here. This method is called after the invocation of each test method in the class.
     }
 
+    // This used to be a standalone test but is now part of ``testEditPerformance``.
     @MainActor
-    func testAddPerformance() throws {
-        let app = startApp()
-        
+    func testAddPerformance(app: XCUIApplication) throws {
         // Verify row are missing in table
         XCTAssertFalse(app.staticTexts["Some Band"].waitForExistence(timeout: 1))
         XCTAssertFalse(app.staticTexts["Awesome Venue"].waitForExistence(timeout: 1))
@@ -60,7 +59,57 @@ class ConcertsUITests: XCTestCase {
     }
     
     
-    // TODO: Test edit performance
+    @MainActor
+    func testEditPerformance() throws {
+        let app = startApp()
+        try testAddPerformance(app: app)
+        
+        // Select the added performance.
+        let table = app.outlines.firstMatch
+        let row = table.cells.element(boundBy: 0)
+        print(app.debugDescription)
+        row.tap()
+        
+        // Bring up the edit sheet.
+        let editButton = findToolbarButton(identifier: "edit-item", in: app)
+        XCTAssertTrue(editButton.waitForExistence(timeout: 2))
+        editButton.click()
+        
+        // Verify band name is the one from the added performance, change it.
+        let bandNameField = app.textFields["band-name"]
+        XCTAssertTrue(bandNameField.waitForExistence(timeout: 2))
+        XCTAssertEqual(bandNameField.value as? String, "Some Band")
+        // The band name field should already have the focus, and its text should already be selected.
+        // Typing should overwrite the current value.
+        app.typeText("Some Other Band")
+        
+        // Confirm edit
+        var confirmButton = app.buttons["add-performance"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 2))
+        confirmButton.click()
+        
+        // Verify rows are updated
+        XCTAssertTrue(app.staticTexts["Some Other Band"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Awesome Venue"].waitForExistence(timeout: 2))
+        
+        // Edit a second time.
+        editButton.click()
+        
+        let venueNameField = app.textFields["venue-name"]
+        XCTAssertTrue(venueNameField.waitForExistence(timeout: 2))
+        venueNameField.click()
+        venueNameField.typeText(" As Well") // appends text!
+        
+        // Confirm edit
+        confirmButton = app.buttons["add-performance"]
+        XCTAssertTrue(confirmButton.waitForExistence(timeout: 2))
+        confirmButton.click()
+        
+        // Verify rows are updated
+        XCTAssertTrue(app.staticTexts["Some Other Band"].waitForExistence(timeout: 2))
+        XCTAssertTrue(app.staticTexts["Awesome Venue As Well"].waitForExistence(timeout: 2))
+    }
+    
 }
 
 
