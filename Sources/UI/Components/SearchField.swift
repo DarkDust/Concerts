@@ -8,10 +8,17 @@
 
 import SwiftUI
 
-// TODO: Resolve semantic difference of the `focus` binding.
+// Haisenko 2026-06-01:
+//
 // On macOS, the binding is set on the outside and the view becomes the first responder. It immediately resets the
 // `focus` binding to false.
 // On iOS, it truly reflects the first responder state. Setting it to false resigns the first responder, for example.
+//
+// I tried to make the macOS binding behave the same way as on iOS, but it had strange side-effects with the table.
+// The window's first responder was observed and the binding was updated as needed. Now, when the search field had the
+// focus and I clicked into the table, the table selection briefly went to the new location, then jumped back and the
+// table lost focus. I wasn't able to figure out why this happened and several attempts at working around it failed.
+// It's not worth it spending any more time on this.
 
 #if canImport(AppKit)
 import AppKit

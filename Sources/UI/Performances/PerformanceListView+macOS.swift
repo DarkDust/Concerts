@@ -35,17 +35,10 @@ extension PerformanceListView {
         @State private
         var alert: AlertFactory.Kind?
         
-        private
-        var searchFocused: Binding<Bool> {
-            Binding {
-                uiState.requestSearchFocus
-            } set: {
-                uiState.requestSearchFocus = $0
-            }
-        }
-        
         
         var body: some View {
+            @Bindable var uiState = uiState
+            
             Table(performances, selection: $selection) {
                 TableColumn(
                     LocalizedStringResource("Band", comment: "Table column header for band name")
@@ -81,7 +74,7 @@ extension PerformanceListView {
             .alert(kind: $alert)
             .toolbar {
                 ToolbarItem {
-                    SearchField(searchText: $searchText, focus: searchFocused)
+                    SearchField(searchText: $searchText, focus: $uiState.requestSearchFocus)
                         .frame(width: 200)
                 }
                 
