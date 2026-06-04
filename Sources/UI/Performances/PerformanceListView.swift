@@ -2,24 +2,39 @@
 //  PerformanceListView.swift
 //  Concerts
 //
-//  Created by Marc Haisenko on 2026-05-27.
+//  Created by Marc Haisenko on 2026-06-04.
 //
 
+import Foundation
 import SwiftUI
 import SwiftData
 
 
-/// Shows a list of performances.
 struct PerformanceListView: View {
     
-    /// The list of performances to show.
-    @Query(
-        sort: [
-            SortDescriptor(\Performance.date, order: .forward),
-            SortDescriptor(\Performance.sequence, order: .forward)
-        ]
-    )
-    private var performances: [Performance]
+    /// Which columns to show.
+    struct Columns: OptionSet {
+        let rawValue: Int
+        
+        /// Show the band column.
+        static let band =  Columns(rawValue: 1 << 0)
+        
+        /// Show the venue column.
+        static let venue =  Columns(rawValue: 1 << 1)
+
+        /// Show the date column.
+        static let date =  Columns(rawValue: 1 << 2)
+        
+        /// Show all known columns.
+        static let all: Columns = [.band, .venue, .date]
+    }
+    
+    
+    /// List of performances to show.
+    let performances: [Performance]
+    
+    /// Which columns to show.
+    let columns: Columns
     
     @State private
     var searchText: String = ""
@@ -39,18 +54,50 @@ struct PerformanceListView: View {
     
     var body: some View {
 #if os(iOS)
-        ContentiOS(performances: filteredPerformances, searchText: $searchText)
+        ContentiOS(
+            performances: filteredPerformances,
+            columns: columns,
+            searchText: $searchText
+        )
 #else
-        ContentMacOS(performances: filteredPerformances, searchText: $searchText)
+        ContentMacOS(
+            performances: filteredPerformances,
+            columns: columns,
+            searchText: $searchText
+        )
 #endif
     }
-    
 }
 
 
-#Preview {
+#Preview("All Columns") {
     let container = ModelContainer.mock(scenario: .basic)
-    PerformanceListView()
+    // swiftlint:disable:next force_try
+    let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
+    
+    PerformanceListView(performances: performances, columns: .all)
+        .modelContainer(container)
+        .environment(Repositories(context: container.mainContext))
+        .environment(AppUIState())
+}
+
+#Preview("Without Band") {
+    let container = ModelContainer.mock(scenario: .basic)
+    // swiftlint:disable:next force_try
+    let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
+    
+    PerformanceListView(performances: performances, columns: [.venue, .date])
+        .modelContainer(container)
+        .environment(Repositories(context: container.mainContext))
+        .environment(AppUIState())
+}
+
+#Preview("Without Venue") {
+    let container = ModelContainer.mock(scenario: .basic)
+    // swiftlint:disable:next force_try
+    let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
+    
+    PerformanceListView(performances: performances, columns: [.band, .date])
         .modelContainer(container)
         .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())

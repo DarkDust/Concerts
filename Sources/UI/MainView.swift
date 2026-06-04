@@ -20,7 +20,7 @@ struct MainView: View {
         @Bindable var uiState = uiState
         
         TabView {
-            PerformanceListView()
+            PerformanceListMainView()
                 .tabItem {
                     Label(
                         LocalizedStringResource("Performances", comment: "Tab view title: list of performances"),

@@ -15,7 +15,12 @@ extension PerformanceListView {
     
     /// List view for macOS using a table.
     struct ContentMacOS: View {
+        /// List of performances to show.
         let performances: [Performance]
+        
+        /// Which columns to render.
+        let columns: PerformanceListView.Columns
+        
         
         @Binding
         var searchText: String
@@ -40,35 +45,25 @@ extension PerformanceListView {
             @Bindable var uiState = uiState
             
             Table(performances, selection: $selection) {
-                TableColumn(
-                    LocalizedStringResource("Band", comment: "Table column header for band name")
-                ) {
-                    Text(
-                        $0.band?.name ?? String(
-                            localized: "Unknown",
-                            comment: "Displayed when the band name is unknown"
-                        )
-                    ).partialAttendance($0.partialAttendance)
+                if columns == .all {
+                    bandColumn
+                    venueColumn
+                    dateColumn
+                    
+                } else {
+                    // Not all columns visible. Date should be first as that has more importance in this view mode.
+                    if columns.contains(.date) {
+                        dateColumn
+                    }
+                    
+                    if columns.contains(.band) {
+                        bandColumn
+                    }
+                    
+                    if columns.contains(.venue) {
+                        venueColumn
+                    }
                 }
-                
-                TableColumn(
-                    LocalizedStringResource("Venue", comment: "Table column header for venue name")
-                ) {
-                    Text($0.venue?.name ?? String(
-                        localized: "Unknown",
-                        comment: "Displayed when the venue name is unknown"
-                    ))
-                    .partialAttendance($0.partialAttendance)
-                }
-                
-                TableColumn(
-                    LocalizedStringResource("Date", comment: "Table column header for performance date")
-                ) {
-                    Text($0.date, format: .dateTime.year().month().day())
-                        .foregroundStyle($0.date.yearColor(colorScheme: colorScheme))
-                        .partialAttendance($0.partialAttendance, useOpacity: true)
-                }
-                .width(100)
             }
             .background(TableScroller(performances: performances))
             .alert(kind: $alert)
@@ -128,6 +123,47 @@ extension PerformanceListView {
 
 private
 extension PerformanceListView.ContentMacOS {
+    
+    var bandColumn: TableColumn<Performance, Never, some View, Text> {
+        TableColumn(
+            LocalizedStringResource("Band", comment: "Table column header for band name")
+        ) {
+            (performance: Performance) in
+            Text(
+                performance.band?.name ?? String(
+                    localized: "Unknown",
+                    comment: "Displayed when the band name is unknown"
+                )
+            ).partialAttendance(performance.partialAttendance)
+        }
+    }
+    
+    var venueColumn: TableColumn<Performance, Never, some View, Text> {
+        TableColumn(
+            LocalizedStringResource("Venue", comment: "Table column header for venue name")
+        ) {
+            (performance: Performance) in
+            Text(performance.venue?.name ?? String(
+                localized: "Unknown",
+                comment: "Displayed when the venue name is unknown"
+            ))
+            .partialAttendance(performance.partialAttendance)
+        }
+    }
+    
+    var dateColumn: TableColumn<Performance, Never, some View, Text> {
+        TableColumn(
+            LocalizedStringResource("Date", comment: "Table column header for performance date"),
+        ) {
+            (performance: Performance) in
+            Text(performance.date, format: .dateTime.year().month().day())
+                .monospacedDigit()
+                .foregroundStyle(performance.date.yearColor(colorScheme: colorScheme))
+                .partialAttendance(performance.partialAttendance, useOpacity: true)
+                .frame(maxWidth: .infinity, alignment: .trailing)
+        }
+        .width(100)
+    }
     
     func addItem() {
         uiState.presentedSheet = .addPerformance
