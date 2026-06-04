@@ -51,6 +51,12 @@ struct AlertFactory {
         
         /// Importing a CSV failed with a message.
         case importFailedWithMessage(message: String)
+        
+        /// Exporting as CSV failed with an error.
+        case exportFailedWithError(any Error)
+        
+        /// Exporting as CSV failed with message.
+        case exportFailedWithMessage(message: String)
     }
     
 }
@@ -100,6 +106,12 @@ extension AlertFactory.Kind {
                 comment: "Alert title shown when deleting a specific performance fails."
             )
             
+        case .exportFailedWithError, .exportFailedWithMessage:
+            return String(
+                localized: "Export failed",
+                comment: "Alert title shown when an import operation fails."
+            )
+            
         case .importCompleted:
             return String(
                 localized: "Import complete",
@@ -125,10 +137,11 @@ extension AlertFactory.Kind {
             
         case .addPerformanceFailed(let error), .editPerformanceFailed(let error),
                 .deleteAllDataFailed(let error), .deletePerformanceFailed(let error),
-                .importFailedWithError(let error):
+                .exportFailedWithError(let error), .importFailedWithError(let error):
             return error.localizedDescription
             
-        case .importCompleted(let message), .importFailedWithMessage(let message):
+        case .exportFailedWithMessage(let message), .importCompleted(let message),
+                .importFailedWithMessage(let message):
             return message
             
         }
@@ -139,6 +152,7 @@ extension AlertFactory.Kind {
     func actions() -> some View {
         switch self {
         case .addPerformanceFailed, .editPerformanceFailed, .deleteAllDataFailed, .deletePerformanceFailed,
+                .exportFailedWithError, .exportFailedWithMessage,
                 .importCompleted, .importFailedWithError, .importFailedWithMessage:
             Button("OK") { }
             

@@ -45,12 +45,14 @@
 			membershipExceptions = (
 				Data/Band.swift,
 				Data/BandRepository.swift,
+				Data/DateTools.swift,
 				Data/ModelContainer.swift,
 				Data/Performance.swift,
 				Data/PerformanceRepository.swift,
 				Data/Repositories.swift,
 				"Data/Repositories+Delete.swift",
 				"Data/Repositories+Edit.swift",
+				"Data/Repositories+Export.swift",
 				"Data/Repositories+Import.swift",
 				Data/Venue.swift,
 				Data/VenueRepository.swift,
@@ -333,7 +335,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -372,7 +374,7 @@
 				DEAD_CODE_STRIPPING = YES;
 				ENABLE_APP_SANDBOX = YES;
 				ENABLE_PREVIEWS = YES;
-				ENABLE_USER_SELECTED_FILES = readonly;
+				ENABLE_USER_SELECTED_FILES = readwrite;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = Resources/Info.plist;
 				"INFOPLIST_KEY_UIApplicationSceneManifest_Generation[sdk=iphoneos*]" = YES;
@@ -541,8 +543,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.darkdust.ConcertsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -552,7 +552,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Concerts.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Concerts";
-				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Debug;
 		};
@@ -564,8 +563,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.darkdust.ConcertsTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -575,7 +572,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Concerts.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/Concerts";
-				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
 		};
@@ -586,8 +582,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.darkdust.ConcertsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -597,7 +591,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = Concerts;
-				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Debug;
 		};
@@ -608,8 +601,6 @@
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = YES;
 				GENERATE_INFOPLIST_FILE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 26.2;
-				MACOSX_DEPLOYMENT_TARGET = 15.7;
 				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = net.darkdust.ConcertsUITests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -619,7 +610,6 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
 				TEST_TARGET_NAME = Concerts;
-				XROS_DEPLOYMENT_TARGET = 26.2;
 			};
 			name = Release;
 		};

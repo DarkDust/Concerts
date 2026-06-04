@@ -201,4 +201,57 @@ struct DataTests {
         #expect(venues.count == 1)
         #expect(venues[0].name == "WGT (AGRA)")
     }
+    
+    @Test @MainActor
+    func testCSVImportExpert() async throws {
+        let container = ModelContainer.mock()
+        let context = ModelContext(container)
+        let repositories = Repositories(context: context)
+        
+        var lines = csvExample.components(separatedBy: "\n")
+        lines.removeFirst()
+        
+        await withCheckedContinuation {
+            (continuation) in
+            
+            _ = repositories.importCSV(lines: lines) {
+                (message) in
+                continuation.resume()
+            }
+        }
+        
+        let performances = try repositories.performances.fetchAll()
+        #expect(performances.count == 16)
+        
+        let exported = try repositories.exportCSV(
+            includeHeader: true,
+            dateFormat: .german,
+            partialAttendenceFormat: .parenthesis
+        )
+        
+        #expect(exported == csvExample)
+    }
+    
 }
+
+
+private
+let csvExample = """
+Band;Datum;Location
+Grossstadtgeflüster;04.02.2016;Feierwerk
+Velvet Acid Christ;16.05.2016;WGT (AGRA)
+The Cure;24.10.2016;Olympiahalle
+Amon Amarth;19.11.2016;Zenith
+She Past Away;18.03.2017;Feierwerk
+VNV Nation;03.06.2017;WGT (AGRA)
+Ah Cama-Sotz;04.06.2017;WGT (Täubchenthal)
+SynthAttack;04.06.2017;WGT (Non Tox)
+Tying Tiffany;04.06.2017;WGT (Non Tox)
+Suicide Commando;05.06.2017;WGT (AGRA)
+Tempers;23.09.2017;Katzenclub
+The Invincible Spirit;23.09.2017;Katzenclub
+Sinistro;29.10.2017;Theaterfabrik (Ostbahnhof)
+Pallbearer;29.10.2017;Theaterfabrik (Ostbahnhof)
+Paradise Lost;29.10.2017;Theaterfabrik (Ostbahnhof)
+Clan of Xymox;11.11.2017;Backstage Club
+"""

@@ -112,6 +112,7 @@ extension PerformanceListView {
                 }
                 
                 do {
+                    // TODO: Implement undo
                     try repositories.delete(performance)
                 } catch {
                     alert = .deletePerformanceFailed(error)

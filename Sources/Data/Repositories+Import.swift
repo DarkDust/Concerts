@@ -38,14 +38,6 @@ extension Repositories {
 private
 extension Repositories {
     
-    /// Date formatter for German dates (because that's what my CSV files use).
-    static let dateFormatter: DateFormatter = {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd.MM.yyyy"
-        return formatter
-    }()
-    
-    
     @MainActor
     func importCSVLine(_ line: String) -> Bool {
         let parts = line.split(separator: ";").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
@@ -69,7 +61,7 @@ extension Repositories {
             partial = false
         }
         
-        guard let date = Self.dateFormatter.date(from: dateString) else {
+        guard let date = DateTools.parse(string: dateString) else {
             NSLog("⚠️ Invalid date '\(dateString)' in line: \(line)")
             return false
         }
