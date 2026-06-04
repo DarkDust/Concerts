@@ -88,17 +88,19 @@ extension PerformanceListView {
                     .accessibilityIdentifier("edit-item")
                     .disabled(selection == nil)
                 }
-                ToolbarItem {
-                    Button(action: addItem) {
-                        Label(
-                            LocalizedStringResource(
-                                "Add Performance",
-                                comment: "Toolbar button title: add a new performance"
-                            ),
-                            systemImage: "plus"
-                        )
+                if columns == .all {
+                    ToolbarItem {
+                        Button(action: addItem) {
+                            Label(
+                                LocalizedStringResource(
+                                    "Add Performance",
+                                    comment: "Toolbar button title: add a new performance"
+                                ),
+                                systemImage: "plus"
+                            )
+                        }
+                        .accessibilityIdentifier("add-item")
                     }
-                    .accessibilityIdentifier("add-item")
                 }
             }
             .onDeleteCommand {

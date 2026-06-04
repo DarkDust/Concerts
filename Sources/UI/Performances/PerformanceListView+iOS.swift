@@ -36,20 +36,26 @@ extension PerformanceListView {
                     }
                 
                 HStack {
-                    SearchField(searchText: $searchText, focus: $searchFocused)
-                        .padding(.leading)
-                    
-                    Button {
-                        appUIState.presentedSheet = .addPerformance
-                    } label: {
-                        Image(systemName: "plus")
-                            .font(.title2)
-                            .padding(4)
+                    if columns == .all {
+                        SearchField(searchText: $searchText, focus: $searchFocused)
+                            .padding(.leading)
+                        
+                        Button {
+                            appUIState.presentedSheet = .addPerformance
+                        } label: {
+                            Image(systemName: "plus")
+                                .font(.title2)
+                                .padding(4)
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .clipShape(Circle())
+                        .padding(.trailing)
+                        .padding(.vertical)
+                        
+                    } else {
+                        SearchField(searchText: $searchText, focus: $searchFocused)
+                            .padding(.horizontal)
                     }
-                    .buttonStyle(.borderedProminent)
-                    .clipShape(Circle())
-                    .padding(.trailing)
-                    .padding(.vertical)
                 }
             }
         }

@@ -45,37 +45,15 @@ struct DirectoryDetailView: View {
                     .padding(.bottom)
             }
             
-            ScrollView {
-                Grid(alignment: .leading, horizontalSpacing: cellPadding) {
-                    ForEach(performances.indices, id: \.self) {
-                        (index) in
-                        
-                        let performance = performances[index]
-                        
-                        
-                        if index > 0 {
-                            Divider()
-                                .gridCellUnsizedAxes(.horizontal)
-                        }
-                        
-                        GridRow {
-                            Text(
-                                performance.date,
-                                format: .dateTime.year().month().day()
-                            )
-                            .foregroundStyle(performance.date.yearColor(colorScheme: colorScheme))
-                            .partialAttendance(performance.partialAttendance, useOpacity: true)
-                            .gridColumnAlignment(.trailing)
-                            
-                            Text(value.text(for: performance))
-                                .partialAttendance(performance.partialAttendance)
-                                .frame(maxWidth: .infinity, alignment: .leading)
-                        }
-                    }
-                }
-            }
+            PerformanceListView(
+                performances: performances,
+                columns: value.columns
+            )
             .navigationTitle(value.name)
             .toolbarTitleDisplayMode(.inline)
+            // The surrounding `TabView` uses a horizontal swipe to switch tabs, which breaks the swipe on list items.
+            // This fixes that.
+            .simultaneousGesture(DragGesture())
         }
         .padding()
     }
@@ -127,23 +105,39 @@ extension DirectoryDetailView.Value {
         }
     }
     
+    var columns: PerformanceListView.Columns {
+        switch self {
+        case .band:
+            return [.venue, .date]
+            
+        case .venue:
+            return [.band, .date]
+        }
+    }
+    
 }
 
 
 #Preview("Band") {
     let container = ModelContainer.mock(scenario: .bandPerformances)
+    let repositories = Repositories(context: container.mainContext)
     // swiftlint:disable:next force_try
     let bands = try! container.mainContext.fetch(FetchDescriptor<Band>())
     
     DirectoryDetailView(value: .band(bands.first!))
         .modelContainer(container)
+        .environment(repositories)
+        .environment(AppUIState())
 }
 
 #Preview("Venue") {
     let container = ModelContainer.mock(scenario: .venuePerformances)
+    let repositories = Repositories(context: container.mainContext)
     // swiftlint:disable:next force_try
     let venues = try! container.mainContext.fetch(FetchDescriptor<Venue>())
     
     DirectoryDetailView(value: .venue(venues.first!))
         .modelContainer(container)
+        .environment(repositories)
+        .environment(AppUIState())
 }
