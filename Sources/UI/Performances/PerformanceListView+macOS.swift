@@ -21,9 +21,11 @@ extension PerformanceListView {
         /// Which columns to render.
         let columns: PerformanceListView.Columns
         
-        
         @Binding
         var searchText: String
+        
+        /// Whether to show the search bar.
+        let showSearch: Bool
         
         @State private
         var selection: Performance.ID?
@@ -68,12 +70,14 @@ extension PerformanceListView {
             .background(TableScroller(performances: performances))
             .alert(kind: $alert)
             .toolbar {
-                ToolbarItem {
-                    SearchField(searchText: $searchText, focus: $uiState.requestSearchFocus)
-                        .frame(width: 200)
+                if showSearch {
+                    ToolbarItem {
+                        SearchField(searchText: $searchText, focus: $uiState.requestSearchFocus)
+                            .frame(width: 200)
+                    }
+                    
+                    ToolbarSpacer(.fixed)
                 }
-                
-                ToolbarSpacer(.fixed)
                 
                 ToolbarItem {
                     Button(action: editItem) {

@@ -20,6 +20,9 @@ extension PerformanceListView {
         @Binding
         var searchText: String
         
+        /// Whether to show the search bar.
+        let showSearch: Bool
+        
         @Environment(AppUIState.self) private
         var appUIState: AppUIState
         
@@ -29,7 +32,7 @@ extension PerformanceListView {
         
         var body: some View {
             ZStack(alignment: .bottom) {
-                WrapperView(performances: performances, columns: columns)
+                WrapperView(performances: performances, columns: columns, showSearch: showSearch)
                     .onTapGesture {
                         // Tap outside the search bar should dismiss it.
                         searchFocused = false
@@ -52,9 +55,12 @@ extension PerformanceListView {
                         .padding(.trailing)
                         .padding(.vertical)
                         
-                    } else {
+                    } else if showSearch {
                         SearchField(searchText: $searchText, focus: $searchFocused)
                             .padding(.horizontal)
+                        
+                    } else {
+                        EmptyView()
                     }
                 }
             }
@@ -75,6 +81,9 @@ extension PerformanceListView {
         
         /// Which columns to render.
         let columns: PerformanceListView.Columns
+        
+        /// Whether to show the search bar.
+        let showSearch: Bool
         
         
         /// Measured maximum width of the date column to achieve a more table-like look.
@@ -120,9 +129,13 @@ extension PerformanceListView {
                         dateColumnWidth = $0
                     }
                     .safeAreaInset(edge: .bottom) {
-                        // Empty transparent inset
-                        Color.clear
-                            .frame(height: 80)
+                        if showSearch {
+                            // Empty transparent inset
+                            Color.clear
+                                .frame(height: 80)
+                        } else {
+                            EmptyView()
+                        }
                     }
                     .alert(kind: $alert)
                     .onAppear {

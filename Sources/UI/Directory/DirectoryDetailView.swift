@@ -47,7 +47,8 @@ struct DirectoryDetailView: View {
             
             PerformanceListView(
                 performances: performances,
-                columns: value.columns
+                columns: value.columns,
+                showSearch: false
             )
             .navigationTitle(value.name)
             .toolbarTitleDisplayMode(.inline)

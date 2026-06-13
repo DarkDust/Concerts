@@ -33,6 +33,14 @@ struct DirectoryNavigationView: View {
     @Binding
     var selection: DirectoryView.Selection?
     
+    @Binding
+    var searchText: String
+    
+#if os(iOS)
+    @State private
+    var searchFocused: Bool = false
+#endif
+    
     /// All known bands.
     let bands: [Band]
     
@@ -47,42 +55,75 @@ struct DirectoryNavigationView: View {
         ScrollViewReader {
             (proxy) in
             
-            List(selection: $selection) {
-                switch kind {
-                case .bands:
-                    ForEach(bands) {
-                        (band) in
-                        
-                        Text(band.name)
-                            .tag(DirectoryView.Selection.band(band.id))
-                    }
-                    
-                case .venues:
-                    ForEach(venues) {
-                        (venue) in
-                        
-                        Text(venue.name)
-                            .tag(DirectoryView.Selection.venue(venue.id))
+            listWrapperView
+                .conditional(horizontalSizeClass == .compact) {
+                    // See large comment in DirectoryView.swift, narrowLayout.
+                    $0.listStyle(.plain)
+                }
+                .onAppear {
+                    if mode == .combined {
+                        scrollToSelection(proxy: proxy)
                     }
                 }
-            }
-            .conditional(horizontalSizeClass == .compact) {
-                // See large comment in DirectoryView.swift, narrowLayout.
-                $0.listStyle(.plain)
-            }
-            .onAppear {
-                if mode == .combined {
+                .onChange(of: kind) {
                     scrollToSelection(proxy: proxy)
                 }
+        }
+    }
+}
+    
+    
+private
+extension DirectoryNavigationView {
+    
+    @ViewBuilder
+    var listWrapperView: some View {
+#if os(macOS)
+        listView
+#else
+        ZStack(alignment: .bottom) {
+            listView
+                .safeAreaInset(edge: .bottom) {
+                    // Empty transparent inset
+                    Color.clear
+                        .frame(height: 80)
+                }
+                .onChange(of: selection) {
+                    searchFocused = false
+                }
+            
+            HStack {
+                SearchField(searchText: $searchText, focus: $searchFocused)
+                    .padding(.leading)
             }
-            .onChange(of: kind) {
-                scrollToSelection(proxy: proxy)
+        }
+#endif
+    }
+    
+    
+    @ViewBuilder
+    var listView: some View {
+        List(selection: $selection) {
+            switch kind {
+            case .bands:
+                ForEach(filteredBands) {
+                    (band) in
+                    
+                    Text(band.name)
+                        .tag(DirectoryView.Selection.band(band.id))
+                }
+                
+            case .venues:
+                ForEach(filteredVenues) {
+                    (venue) in
+                    
+                    Text(venue.name)
+                        .tag(DirectoryView.Selection.venue(venue.id))
+                }
             }
         }
     }
     
-    
-    private
     func scrollToSelection(proxy: ScrollViewProxy) {
         if let selection {
             proxy.scrollTo(selection, anchor: .center)
@@ -101,4 +142,25 @@ struct DirectoryNavigationView: View {
             }
         }
     }
+    
+    var filteredBands: [Band] {
+        if searchText.isEmpty {
+            return bands
+        }
+        
+        return bands.filter {
+            $0.name.localizedStandardContains(searchText)
+        }
+    }
+    
+    var filteredVenues: [Venue] {
+        if searchText.isEmpty {
+            return venues
+        }
+        
+        return venues.filter {
+            $0.name.localizedStandardContains(searchText)
+        }
+    }
+    
 }

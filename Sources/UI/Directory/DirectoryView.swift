@@ -57,6 +57,13 @@ struct DirectoryView: View {
     @State private
     var venueSelection: Selection?
     
+    @State private
+    var searchText: String = ""
+    
+    @Environment(AppUIState.self) private
+    var uiState: AppUIState
+    
+    
     /// Currently selected band or venue, depending on the current ``kind`` for the macOS and iPad UI.
     private
     func combinedSelectionBinding() -> Binding<Selection?> {
@@ -133,6 +140,7 @@ struct DirectoryView: View {
                         mode: .single,
                         kind: .constant(.bands),
                         selection: $bandSelection,
+                        searchText: $searchText,
                         bands: bands,
                         venues: venues
                     )
@@ -157,6 +165,7 @@ struct DirectoryView: View {
                         mode: .single,
                         kind: .constant(.venues),
                         selection: $venueSelection,
+                        searchText: $searchText,
                         bands: bands,
                         venues: venues
                     )
@@ -200,6 +209,7 @@ struct DirectoryView: View {
                     mode: .combined,
                     kind: $kind,
                     selection: combinedSelectionBinding(),
+                    searchText: $searchText,
                     bands: bands,
                     venues: venues
                 )
@@ -222,6 +232,16 @@ struct DirectoryView: View {
                 }
             }
         }
+#if os(macOS)
+        .toolbar {
+            @Bindable var uiState = uiState
+            
+            ToolbarItem(placement: .principal) {
+                SearchField(searchText: $searchText, focus: $uiState.requestSearchFocus)
+                    .frame(width: 200)
+            }
+        }
+#endif
     }
     
 }

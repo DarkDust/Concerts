@@ -36,6 +36,9 @@ struct PerformanceListView: View {
     /// Which columns to show.
     let columns: Columns
     
+    /// Whether to show the search bar.
+    let showSearch: Bool
+    
     @State private
     var searchText: String = ""
     
@@ -57,13 +60,15 @@ struct PerformanceListView: View {
         ContentiOS(
             performances: filteredPerformances,
             columns: columns,
-            searchText: $searchText
+            searchText: $searchText,
+            showSearch: showSearch
         )
 #else
         ContentMacOS(
             performances: filteredPerformances,
             columns: columns,
-            searchText: $searchText
+            searchText: $searchText,
+            showSearch: showSearch
         )
 #endif
     }
@@ -75,7 +80,7 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: .all)
+    PerformanceListView(performances: performances, columns: .all, showSearch: true)
         .modelContainer(container)
         .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())
@@ -86,7 +91,7 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: [.venue, .date])
+    PerformanceListView(performances: performances, columns: [.venue, .date], showSearch: true)
         .modelContainer(container)
         .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())
@@ -97,7 +102,7 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: [.band, .date])
+    PerformanceListView(performances: performances, columns: [.band, .date], showSearch: true)
         .modelContainer(container)
         .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())
