@@ -27,6 +27,10 @@ struct AutoSuggestTextField<Suggestion: Identifiable>: View {
     @Binding private
     var text: String
     
+    /// Whether the text field has the focus and should show suggestions.
+    private
+    let isFocused: Bool
+    
     /// Provides a list of suggestion items.
     private
     let suggestions: SuggestionProvider
@@ -43,11 +47,13 @@ struct AutoSuggestTextField<Suggestion: Identifiable>: View {
     init(
         _ title: String,
         text: Binding<String>,
+        isFocused: Bool,
         suggestions: @escaping SuggestionProvider,
         suggestionLabel: @escaping SuggestionLabel
     ) {
         self.title = title
         self._text = text
+        self.isFocused = isFocused
         self.suggestions = suggestions
         self.suggestionLabel = suggestionLabel
     }
@@ -80,7 +86,9 @@ struct AutoSuggestTextField<Suggestion: Identifiable>: View {
 #else
         VStack(alignment: .leading, spacing: 4) {
             TextField(title, text: $text)
-            iosSuggestions
+            if isFocused {
+                iosSuggestions
+            }
         }
         .task(id: text) {
             let query = text.trimmingCharacters(in: .whitespacesAndNewlines)

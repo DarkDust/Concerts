@@ -16,6 +16,7 @@ struct AddOrEditPerformanceView: View {
     /// Known fields for keyboard focus.
     enum Field {
         case bandName
+        case venueName
     }
     
     /// When set, the existing performance to edit.
@@ -225,6 +226,7 @@ extension AddOrEditPerformanceView {
                 comment: "Label for the text field to enter the band name when adding a performance"
             ),
             text: $bandName,
+            isFocused: focusedField == .bandName,
             suggestions: {
                 guard !$0.isEmpty else {
                     return []
@@ -246,6 +248,10 @@ extension AddOrEditPerformanceView {
         )
         .accessibilityIdentifier("band-name")
         .focused($focusedField, equals: .bandName)
+        .submitLabel(.next)
+        .onSubmit {
+            focusedField = .venueName
+        }
     }
     
     
@@ -257,6 +263,7 @@ extension AddOrEditPerformanceView {
                 comment: "Label for the text field to enter the venue or event name when adding a performance"
             ),
             text: $venueName,
+            isFocused: focusedField == .venueName,
             suggestions: {
                 guard !$0.isEmpty else {
                     return []
@@ -277,6 +284,15 @@ extension AddOrEditPerformanceView {
             suggestionLabel: { $0.name }
         )
         .accessibilityIdentifier("venue-name")
+        .focused($focusedField, equals: .venueName)
+        .submitLabel(.done)
+        .onSubmit {
+            if let existing {
+                editPerformance(existing)
+            } else {
+                addPerformance()
+            }
+        }
     }
     
 }
