@@ -211,8 +211,9 @@ extension SettingsView {
                 }
             }.fileExporter(
                 isPresented: $showingExporter,
-                documents: [CSVDocument(data: exportData)],
-                contentType: csvUTType
+                document: CSVDocument(data: exportData),
+                contentType: csvUTType,
+                defaultFilename: "Concerts Backup \(DateTools.format(date: .now, as: .iso8601))"
             ) {
                 (result) in
                 
