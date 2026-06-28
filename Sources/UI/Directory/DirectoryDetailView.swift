@@ -22,6 +22,9 @@ struct DirectoryDetailView: View {
     /// Band or venue to present data for.
     let value: Value
     
+    @State private
+    var isEditing = false
+    
     /// Padding between date and text, scaling with the dynamic text size.
     @ScaledMetric private
     var cellPadding: CGFloat = 20
@@ -57,12 +60,29 @@ struct DirectoryDetailView: View {
             .simultaneousGesture(DragGesture())
         }
         .padding()
+        .toolbar {
+            #if os(macOS)
+            let placement: ToolbarItemPlacement = .automatic
+            #else
+            let placement: ToolbarItemPlacement = .topBarTrailing
+            #endif
+            
+            ToolbarItem(placement: placement) {
+                Button {
+                    self.isEditing = true
+                } label: {
+                    Label("Edit", systemImage: "pencil")
+                }
+            }
+        }
+        .sheet(isPresented: $isEditing) {
+            NameEditView(value: value, isEditing: $isEditing)
+        }
     }
     
 }
 
 
-private
 extension DirectoryDetailView.Value {
     
     var name: String {
@@ -71,6 +91,12 @@ extension DirectoryDetailView.Value {
         case .venue(let venue): return venue.name
         }
     }
+    
+}
+
+
+private
+extension DirectoryDetailView.Value {
     
     var performances: [Performance] {
         switch self {
