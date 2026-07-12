@@ -189,8 +189,8 @@ struct DirectoryView: View {
             
             Divider()
             
-            kindPicker
-                .padding()
+            kindTabs
+                .padding(.bottom)
         }
     }
 #endif
@@ -269,6 +269,14 @@ extension DirectoryView {
         }
         .pickerStyle(.segmented)
         .labelsHidden()
+    }
+    
+    
+    var kindTabs: some View {
+        let tab1 = OldSchoolTabView<Kind>.Tab(id: .bands, title: String(localized: "Bands"))
+        let tab2 = OldSchoolTabView<Kind>.Tab(id: .venues, title: String(localized: "Venues"))
+        
+        return OldSchoolTabView(tabs: [tab1, tab2], selection: $kind)
     }
     
     
