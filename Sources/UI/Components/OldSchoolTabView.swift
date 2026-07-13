@@ -101,6 +101,7 @@ extension OldSchoolTabView {
                     .bold(isSelected)
                     .padding(.horizontal)
             }
+            .contentShape(Rectangle())
             .scaleEffect(isPressed ? 1.2 : 1, anchor: .top)
             ._onButtonGesture {
                 (pressed) in
