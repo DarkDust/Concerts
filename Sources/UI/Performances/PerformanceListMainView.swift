@@ -23,7 +23,12 @@ struct PerformanceListMainView: View {
     var performances: [Performance]
     
     var body: some View {
-        PerformanceListView(performances: performances, columns: .all, showSearch: true)
+        PerformanceListView(
+            performances: performances,
+            columns: .all,
+            showSearch: true,
+            showsImageBackground: true
+        )
     }
     
 }

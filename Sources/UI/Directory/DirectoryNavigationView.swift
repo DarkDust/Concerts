@@ -83,6 +83,7 @@ extension DirectoryNavigationView {
 #else
         ZStack(alignment: .bottom) {
             listView
+                .scrollContentBackground(.hidden)
                 .safeAreaInset(edge: .bottom) {
                     // Empty transparent inset
                     Color.clear
@@ -110,6 +111,9 @@ extension DirectoryNavigationView {
                     (band) in
                     
                     Text(band.name)
+                    #if os(iOS)
+                        .listRowBackground(Color(UIColor.systemGroupedBackground).opacity(0.8))
+                    #endif
                         .tag(DirectoryView.Selection.band(band.id))
                 }
                 
@@ -118,6 +122,9 @@ extension DirectoryNavigationView {
                     (venue) in
                     
                     Text(venue.name)
+                    #if os(iOS)
+                        .listRowBackground(Color(UIColor.systemGroupedBackground).opacity(0.8))
+                    #endif
                         .tag(DirectoryView.Selection.venue(venue.id))
                 }
             }

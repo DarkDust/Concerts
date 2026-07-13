@@ -51,7 +51,8 @@ struct DirectoryDetailView: View {
             PerformanceListView(
                 performances: performances,
                 columns: value.columns,
-                showSearch: false
+                showSearch: false,
+                showsImageBackground: false
             )
             .navigationTitle(value.name)
             .toolbarTitleDisplayMode(.inline)
@@ -60,6 +61,9 @@ struct DirectoryDetailView: View {
             .simultaneousGesture(DragGesture())
         }
         .padding()
+        #if os(iOS)
+        .background { SplitViewBackgroundRemover(name: "Detail") }
+        #endif
         .toolbar {
             #if os(macOS)
             let placement: ToolbarItemPlacement = .automatic

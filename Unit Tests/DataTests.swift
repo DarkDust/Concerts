@@ -232,6 +232,14 @@ struct DataTests {
         #expect(exported == csvExample)
     }
     
+    @Test
+    func testImageManager() {
+        let manager = ImageManager.instance
+        #expect(manager.randomImageURL(in: .band).absoluteString.contains("/Bands/"))
+        #expect(manager.randomImageURL(in: .venue).absoluteString.contains("/Venues/"))
+        #expect(manager.randomImageURL(in: .misc).absoluteString.contains("/Misc/"))
+    }
+    
 }
 
 

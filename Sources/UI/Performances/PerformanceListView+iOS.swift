@@ -23,6 +23,9 @@ extension PerformanceListView {
         /// Whether to show the search bar.
         let showSearch: Bool
         
+        /// Whether to show an image background.
+        let showsImageBackground: Bool
+        
         @Environment(AppUIState.self) private
         var appUIState: AppUIState
         
@@ -32,7 +35,12 @@ extension PerformanceListView {
         
         var body: some View {
             ZStack(alignment: .bottom) {
-                WrapperView(performances: performances, columns: columns, showSearch: showSearch)
+                WrapperView(
+                    performances: performances,
+                    columns: columns,
+                    showSearch: showSearch,
+                    showsImageBackground: showsImageBackground
+                )
                     .onTapGesture {
                         // Tap outside the search bar should dismiss it.
                         searchFocused = false
@@ -85,6 +93,9 @@ extension PerformanceListView {
         /// Whether to show the search bar.
         let showSearch: Bool
         
+        /// Whether to show an image background.
+        let showsImageBackground: Bool
+        
         
         /// Measured maximum width of the date column to achieve a more table-like look.
         @State private
@@ -99,6 +110,9 @@ extension PerformanceListView {
         @State private
         var alert: AlertFactory.Kind?
         
+        @State private
+        var backgroundImage = ImageManager.instance.randomImage(in: nil)
+        
         
         var body: some View {
             GeometryReader {
@@ -110,6 +124,7 @@ extension PerformanceListView {
                         (performance) in
                         
                         RowView(performance: performance, columns: columns, dateColumnWidth: dateColumnWidth)
+                            .listRowBackground(Color(UIColor.systemGroupedBackground).opacity(0.8))
                         .id(performance)
                         .swipeActions(edge: .trailing) {
                             Button(role: .destructive) {
@@ -123,6 +138,15 @@ extension PerformanceListView {
                             } label: {
                                 Label("Edit", systemImage: "square.and.pencil")
                             }
+                        }
+                    }
+                    .usePlainListStyle(showsImageBackground)
+                    .scrollContentBackground(.hidden)
+                    .background(alignment: .center) {
+                        if showsImageBackground {
+                            backgroundImage.asBackground()
+                        } else {
+                            EmptyView()
                         }
                     }
                     .onPreferenceChange(MaxWidthPreferenceKey.self) {
@@ -272,6 +296,21 @@ extension PerformanceListView.WrapperView {
             // Scroll to bottom. The anchor point is "lower" than .bottom to absolutely scroll to the
             // bottom. With .bottom, there are a few pixels left to scroll.
             proxy.scrollTo(last, anchor: UnitPoint(x: 0.5, y: 1.5))
+        }
+    }
+    
+}
+
+
+private
+extension View {
+    
+    @ViewBuilder
+    func usePlainListStyle(_ plain: Bool) -> some View {
+        if plain {
+            self.listStyle(.plain)
+        } else {
+            self.listStyle(.automatic)
         }
     }
     

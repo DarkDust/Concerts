@@ -12,8 +12,9 @@ import SwiftData
 struct ConcertsApp: App {
     
     /// Shared UI state used throughout the app.
-    @State
-    private var uiState = AppUIState()
+    @State private
+    var uiState = AppUIState()
+    
     
     var body: some Scene {
         WindowGroup {

@@ -63,6 +63,12 @@ struct DirectoryView: View {
     @Environment(AppUIState.self) private
     var uiState: AppUIState
     
+    @State private
+    var bandBackgroundImage = ImageManager.instance.randomImage(in: .band)
+    
+    @State private
+    var venueBackgroundImage = ImageManager.instance.randomImage(in: .venue)
+    
     
     /// Currently selected band or venue, depending on the current ``kind`` for the macOS and iPad UI.
     private
@@ -144,6 +150,7 @@ struct DirectoryView: View {
                         bands: bands,
                         venues: venues
                     )
+                    .background { SplitViewBackgroundRemover(name: "Band") }
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Image(systemName: "music.microphone")
@@ -169,6 +176,7 @@ struct DirectoryView: View {
                         bands: bands,
                         venues: venues
                     )
+                    .background { SplitViewBackgroundRemover(name: "Venue") }
                     .toolbar {
                         ToolbarItem(placement: .principal) {
                             Image(systemName: "mappin.and.ellipse")
@@ -191,6 +199,14 @@ struct DirectoryView: View {
             
             kindTabs
                 .padding(.bottom)
+        }
+        .background(alignment: .center) {
+            switch kind {
+            case .bands:
+                bandBackgroundImage.asBackground()
+            case .venues:
+                venueBackgroundImage.asBackground()
+            }
         }
     }
 #endif

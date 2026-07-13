@@ -30,6 +30,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		49D2DBAA30053B290039D70E /* Exceptions for "Resources" folder in "UnitTests" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				Images,
+			);
+			target = 49FAF8832FC628FE00C5239D /* UnitTests */;
+		};
 		49FAF8B42FC62A2E00C5239D /* Exceptions for "Resources" folder in "Concerts" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
@@ -46,6 +53,7 @@
 				Data/Band.swift,
 				Data/BandRepository.swift,
 				Data/DateTools.swift,
+				Data/ImageManager.swift,
 				Data/ModelContainer.swift,
 				Data/Performance.swift,
 				Data/PerformanceRepository.swift,
@@ -85,6 +93,10 @@
 			isa = PBXFileSystemSynchronizedRootGroup;
 			exceptions = (
 				49FAF8B42FC62A2E00C5239D /* Exceptions for "Resources" folder in "Concerts" target */,
+				49D2DBAA30053B290039D70E /* Exceptions for "Resources" folder in "UnitTests" target */,
+			);
+			explicitFolders = (
+				Images,
 			);
 			path = Resources;
 			sourceTree = "<group>";

@@ -39,6 +39,9 @@ struct PerformanceListView: View {
     /// Whether to show the search bar.
     let showSearch: Bool
     
+    /// Where supported, whether to show an image background.
+    let showsImageBackground: Bool
+    
     @State private
     var searchText: String = ""
     
@@ -61,7 +64,8 @@ struct PerformanceListView: View {
             performances: filteredPerformances,
             columns: columns,
             searchText: $searchText,
-            showSearch: showSearch
+            showSearch: showSearch,
+            showsImageBackground: showsImageBackground
         )
 #else
         ContentMacOS(
@@ -80,7 +84,7 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: .all, showSearch: true)
+    PerformanceListView(performances: performances, columns: .all, showSearch: true, showsImageBackground: true)
         .modelContainer(container)
         .environment(Repositories(context: container.mainContext))
         .environment(AppUIState())
@@ -91,10 +95,15 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: [.venue, .date], showSearch: true)
-        .modelContainer(container)
-        .environment(Repositories(context: container.mainContext))
-        .environment(AppUIState())
+    PerformanceListView(
+        performances: performances,
+        columns: [.venue, .date],
+        showSearch: true,
+        showsImageBackground: true
+    )
+    .modelContainer(container)
+    .environment(Repositories(context: container.mainContext))
+    .environment(AppUIState())
 }
 
 #Preview("Without Venue") {
@@ -102,8 +111,13 @@ struct PerformanceListView: View {
     // swiftlint:disable:next force_try
     let performances = try! container.mainContext.fetch(FetchDescriptor<Performance>())
     
-    PerformanceListView(performances: performances, columns: [.band, .date], showSearch: true)
-        .modelContainer(container)
-        .environment(Repositories(context: container.mainContext))
-        .environment(AppUIState())
+    PerformanceListView(
+        performances: performances,
+        columns: [.band, .date],
+        showSearch: true,
+        showsImageBackground: true
+    )
+    .modelContainer(container)
+    .environment(Repositories(context: container.mainContext))
+    .environment(AppUIState())
 }
