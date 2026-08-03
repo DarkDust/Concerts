@@ -32,9 +32,18 @@ extension PerformanceListView {
         @State private
         var searchFocused: Bool = false
         
+        @State private
+        var backgroundImage = ImageManager.instance.randomImage(in: nil)
+        
         
         var body: some View {
             ZStack(alignment: .bottom) {
+                if showsImageBackground {
+                    directoryBackground
+                } else {
+                    EmptyView()
+                }
+                
                 WrapperView(
                     performances: performances,
                     columns: columns,
@@ -73,8 +82,24 @@ extension PerformanceListView {
                 }
             }
         }
+        
+        
+        /// A background view that remains stable even when the software keyboard appears.
+        private
+        var directoryBackground: some View {
+            GeometryReader {
+                (proxy) in
+                
+                backgroundImage
+                    .resizable()
+                    .scaledToFill()
+                    .frame(width: proxy.size.width, height: proxy.size.height)
+                    .clipped()
+            }
+            .ignoresSafeArea()
+            .allowsHitTesting(false)
+        }
     }
-    
 }
 
 
@@ -110,9 +135,6 @@ extension PerformanceListView {
         @State private
         var alert: AlertFactory.Kind?
         
-        @State private
-        var backgroundImage = ImageManager.instance.randomImage(in: nil)
-        
         
         var body: some View {
             GeometryReader {
@@ -142,13 +164,6 @@ extension PerformanceListView {
                     }
                     .usePlainListStyle(showsImageBackground)
                     .scrollContentBackground(.hidden)
-                    .background(alignment: .center) {
-                        if showsImageBackground {
-                            backgroundImage.asBackground()
-                        } else {
-                            EmptyView()
-                        }
-                    }
                     .onPreferenceChange(MaxWidthPreferenceKey.self) {
                         dateColumnWidth = $0
                     }
